@@ -1,0 +1,8 @@
+# Bytecode Python
+__pycache__/
+*.pyc
+
+# Ambientes virtuais (bibliotecas instaladas)
+venv/
+.venv/
+env/
