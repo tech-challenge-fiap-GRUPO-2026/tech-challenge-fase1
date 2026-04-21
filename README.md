@@ -1,10 +1,10 @@
-# Classificador de Risco — Câncer do Colo do Útero
+# 🎗️ Classificador de Risco — Câncer do Colo do Útero
 
 Trabalho do **Tech Challenge Fase 1** da Pós-Graduação **IA Para Desenvolvedores** — FIAP
 
 ---
 
-## Equipe
+## 👥 Equipe
 
 | Nome | E-mail |
 |------|--------|
@@ -16,7 +16,7 @@ Trabalho do **Tech Challenge Fase 1** da Pós-Graduação **IA Para Desenvolvedo
 
 ---
 
-## Descrição do Projeto
+## 📋 Descrição do Projeto
 
 Projeto de aprendizado de máquina para **triagem de pacientes com risco de câncer do colo do útero**.  
 O modelo utiliza o dataset *Risk Factors Cervical Cancer*, coletado no Hospital Universitário de Caracas, Venezuela, disponível no UCI Machine Learning Repository.
@@ -25,7 +25,7 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 
 ---
 
-## Dataset
+## 📊 Dataset
 
 | Atributo | Valor |
 |----------|-------|
@@ -37,9 +37,9 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 | Classe positiva (câncer) | 55 pacientes (6%) |
 | Classe negativa (saudável) | 803 pacientes (94%) |
 
-> O dataset é altamente **desbalanceado**: apenas 6% dos registros correspondem a casos positivos de biópsia.
+> ⚠️ O dataset é altamente **desbalanceado**: apenas 6% dos registros correspondem a casos positivos de biópsia.
 
-### Variáveis originais
+### 🔬 Variáveis originais
 
 | Variável | Tipo | Descrição |
 |----------|------|-----------|
@@ -80,22 +80,22 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 
 ---
 
-## Pipeline de Pré-Processamento
+## ⚙️ Pipeline de Pré-Processamento
 
 O notebook implementa um pipeline sklearn com as seguintes etapas:
 
-1. **Remoção de colunas sem variabilidade** — `STDs:AIDS` e `STDs:cervical condylomatosis` (todos os valores são zero).
-2. **Tratamento de valores nulos com indicador de missing** — nulos substituídos pela média + criação de coluna `_preenchido` indicando se a questão foi respondida.
-3. **Agrupamento de colunas indicadoras redundantes** — colunas com padrão idêntico de respostas são consolidadas em uma única coluna `_respondido`.
-4. **Redução de redundância no tabagismo** — `Smokes (years)` × `Smokes (packs/year)` combinados em `smoke_year_packs`.
-5. **Transformação logarítmica de variáveis demográficas** — `Age`, `Number of sexual partners`, `First sexual intercourse`, `Num of pregnancies` (log1p).
-6. **Feature engineering de contraceptivos** — criação de `contraceptive_mid_risk` e `contraceptive_exposure`.
-7. **Remoção de redundância entre STDs temporais** — `STDs: Time since first diagnosis` removida por ser redundante com `STDs: Time since last diagnosis`.
-8. **Criação de atributos estratégicos** — `sexual_risk`, `smoke_age_risk`, `has_std`, `std_age_risk`, `combined_risk`.
+1. 🗑️ **Remoção de colunas sem variabilidade** — `STDs:AIDS` e `STDs:cervical condylomatosis` (todos os valores são zero).
+2. 🩹 **Tratamento de valores nulos com indicador de missing** — nulos substituídos pela média + criação de coluna `_preenchido` indicando se a questão foi respondida.
+3. 🔗 **Agrupamento de colunas indicadoras redundantes** — colunas com padrão idêntico de respostas são consolidadas em uma única coluna `_respondido`.
+4. 🚬 **Redução de redundância no tabagismo** — `Smokes (years)` × `Smokes (packs/year)` combinados em `smoke_year_packs`.
+5. 📐 **Transformação logarítmica de variáveis demográficas** — `Age`, `Number of sexual partners`, `First sexual intercourse`, `Num of pregnancies` (log1p).
+6. 💊 **Feature engineering de contraceptivos** — criação de `contraceptive_mid_risk` e `contraceptive_exposure`.
+7. ✂️ **Remoção de redundância entre STDs temporais** — `STDs: Time since first diagnosis` removida por ser redundante com `STDs: Time since last diagnosis`.
+8. 🧠 **Criação de atributos estratégicos** — `sexual_risk`, `smoke_age_risk`, `has_std`, `std_age_risk`, `combined_risk`.
 
 ---
 
-## Modelo
+## 🤖 Modelo
 
 - **Algoritmo:** Random Forest Classifier (scikit-learn)
 - **Configuração:** `class_weight={0: 1, 1: 14}` para compensar o desbalanceamento
@@ -103,7 +103,7 @@ O notebook implementa um pipeline sklearn com as seguintes etapas:
 
 ---
 
-## Resultados
+## 📈 Resultados
 
 ```
               precision    recall  f1-score   support
@@ -118,42 +118,43 @@ weighted avg       0.91      0.94      0.91       172
 
 | Classe | Precisão | Recall | F1-Score |
 |--------|----------|--------|----------|
-| Saudável (0) | 94% | 99% | 0.97 |
-| Câncer (1) | 50% | 9% | 0.15 |
-| **Acurácia geral** | — | — | **94%** |
+| ✅ Saudável (0) | 94% | 99% | 0.97 |
+| 🔴 Câncer (1) | 50% | 9% | 0.15 |
+| **🎯 Acurácia geral** | — | — | **94%** |
 
-> **Observação:** O baixo Recall na classe positiva (9%) indica que o modelo ainda perde a maioria dos casos reais de biópsia positiva. Isso é esperado dado o forte desbalanceamento (6% de casos positivos). Estratégias de melhoria incluem SMOTE, ajuste de threshold de decisão e coleta de mais dados rotulados.
+> 💡 **Observação:** O baixo Recall na classe positiva (9%) indica que o modelo ainda perde a maioria dos casos reais de biópsia positiva. Isso é esperado dado o forte desbalanceamento (6% de casos positivos). Estratégias de melhoria incluem SMOTE, ajuste de threshold de decisão e coleta de mais dados rotulados.
 
 ---
 
-## Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
 ```
 tech-challenge-fase1/
 ├── risk_factors_cervical_cancer.csv   # Dataset original (UCI)
 ├── init_cervical_cancer.ipynb         # Notebook principal com análise e modelo
 ├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
-├── relatorio_tecnico_abnt.html        # Relatório técnico completo (formato ABNT, gerar PDF)
+├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
+├── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
 └── README.md                          # Este arquivo
 ```
 
 ---
 
-## Instruções de Execução
+## 🚀 Instruções de Execução
 
-### Pré-requisitos
+### ✅ Pré-requisitos
 
 - Python 3.8 ou superior
 - pip
 
-### 1. Clonar o repositório
+### 1. 📥 Clonar o repositório
 
 ```bash
 git clone https://github.com/wilsonLima/tech-challenge-fase1
 cd tech-challenge-fase1
 ```
 
-### 2. (Opcional) Criar ambiente virtual
+### 2. 🐍 (Opcional) Criar ambiente virtual
 
 ```bash
 python -m venv venv
@@ -165,13 +166,13 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 3. Instalar as dependências
+### 3. 📦 Instalar as dependências
 
 ```bash
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 ```
 
-### 4. Executar o notebook
+### 4. ▶️ Executar o notebook
 
 ```bash
 jupyter notebook init_cervical_cancer.ipynb
@@ -184,28 +185,24 @@ pip install jupyterlab
 jupyter lab init_cervical_cancer.ipynb
 ```
 
-### 5. Executar todas as células
+### 5. ⚡ Executar todas as células
 
 No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline completo do início ao fim.
 
-### 6. Visualizar o relatório HTML
+### 6. 🌐 Visualizar o relatório HTML
 
 Abra o arquivo `relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
 
-### 7. Gerar o PDF do relatório técnico (ABNT)
+### 7. 📄 Relatório técnico (ABNT)
 
-1. Abra `relatorio_tecnico_abnt.html` no Google Chrome ou Edge
-2. Pressione `Ctrl + P` (`Cmd + P` no Mac)
-3. Selecione **"Salvar como PDF"** como destino
-4. Em **Mais configurações**, defina:
-   - Tamanho do papel: **A4**
-   - Margens: **Nenhuma** (as margens ABNT estão definidas no CSS)
-   - Marque **"Gráficos de fundo"** para preservar os fundos coloridos
-5. Clique em **Salvar**
+O relatório técnico já está disponível no repositório em dois formatos:
+
+- `relatorio_tecnico_abnt.pdf` — abra diretamente em qualquer leitor de PDF.
+- `relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
 
 ---
 
-## Dependências
+## 🧩 Dependências
 
 | Biblioteca | Versão recomendada | Uso |
 |------------|-------------------|-----|
