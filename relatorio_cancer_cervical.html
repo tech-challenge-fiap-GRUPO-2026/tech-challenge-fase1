@@ -32,7 +32,6 @@
       color: var(--text);
       line-height: 1.7;
     }
-    /* ── HEADER ── */
     .hero {
       background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #db2777 100%);
       color: #fff;
@@ -40,6 +39,7 @@
       text-align: center;
     }
     .hero h1 { font-size: 2.4rem; font-weight: 800; letter-spacing: -.5px; margin-bottom: 12px; }
+    .hero .subtitle { font-size: 1rem; opacity: .8; margin-bottom: 6px; }
     .hero p  { font-size: 1.1rem; opacity: .85; max-width: 700px; margin: 0 auto 20px; }
     .hero-meta { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 24px; }
     .hero-meta span {
@@ -47,9 +47,30 @@
       padding: 6px 18px; border-radius: 999px;
       font-size: .85rem; font-weight: 600;
     }
-    /* ── LAYOUT ── */
+    .team-box {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 12px;
+      padding: 20px 32px;
+      margin: 28px auto 0;
+      max-width: 820px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px 24px;
+      text-align: left;
+    }
+    .team-box .team-title {
+      grid-column: 1 / -1;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      opacity: .7;
+      margin-bottom: 4px;
+    }
+    .team-member { font-size: .88rem; opacity: .92; }
+    .team-member strong { display: block; font-size: .93rem; }
     .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
-    /* ── TOC ── */
     .toc {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 28px 32px; margin-bottom: 48px;
@@ -59,7 +80,6 @@
     .toc li { margin-bottom: 6px; }
     .toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
     .toc a:hover { text-decoration: underline; }
-    /* ── SECTION ── */
     .section { margin-bottom: 60px; }
     .section-header {
       display: flex; align-items: center; gap: 14px;
@@ -73,7 +93,6 @@
       font-weight: 800; font-size: 1rem; flex-shrink: 0;
     }
     .section-header h2 { font-size: 1.55rem; font-weight: 700; color: var(--text); }
-    /* ── CARDS ── */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
     .card {
       background: var(--card); border: 1px solid var(--border);
@@ -88,7 +107,6 @@
     .card-label { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
     .card-value { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
     .card-sub   { font-size: .82rem; color: var(--muted); margin-top: 4px; }
-    /* ── CHART WRAPPER ── */
     .chart-wrap {
       background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 28px 24px; margin-bottom: 24px;
@@ -96,14 +114,12 @@
     .chart-wrap h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 18px; }
     .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media(max-width:700px){ .chart-row { grid-template-columns: 1fr; } }
-    /* ── TABLE ── */
     .tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; }
     table { width: 100%; border-collapse: collapse; font-size: .9rem; background: var(--card); }
     thead tr { background: var(--primary); color: #fff; }
     thead th { padding: 12px 16px; text-align: left; font-weight: 700; }
     tbody tr:nth-child(even) { background: var(--primary-light); }
     tbody td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
-    /* ── CALLOUT ── */
     .callout {
       border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;
       display: flex; gap: 14px; align-items: flex-start;
@@ -116,20 +132,17 @@
     .callout-icon  { font-size: 1.5rem; line-height: 1; }
     .callout-body  { font-size: .93rem; }
     .callout-body strong { display: block; font-size: 1rem; margin-bottom: 4px; }
-    /* ── BADGE ── */
     .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
     .badge.green  { background: var(--success-light); color: var(--success); }
     .badge.yellow { background: var(--warning-light); color: var(--warning); }
     .badge.red    { background: var(--danger-light);  color: var(--danger);  }
     .badge.purple { background: var(--primary-light); color: var(--primary); }
-    /* ── CODE BLOCK ── */
     pre {
       background: #1e293b; color: #e2e8f0;
       border-radius: 10px; padding: 18px 20px;
       overflow-x: auto; font-size: .82rem; line-height: 1.6;
       margin-bottom: 20px;
     }
-    /* ── STEP LIST ── */
     .steps { counter-reset: step; list-style: none; padding: 0; }
     .steps li {
       counter-increment: step;
@@ -142,7 +155,6 @@
       display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: .85rem; flex-shrink: 0; margin-top: 2px;
     }
-    /* ── METRIC TABLE ── */
     .metric-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
     @media(max-width:600px){ .metric-grid { grid-template-columns: repeat(2,1fr); } }
     .metric-cell {
@@ -152,19 +164,17 @@
     .metric-cell .m-label { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
     .metric-cell .m-val   { font-size: 1.7rem; font-weight: 800; margin: 4px 0; }
     .metric-cell .m-class { font-size: .78rem; font-weight: 600; }
-    /* ── PROGRESS BAR ── */
     .pbar-row { margin-bottom: 12px; }
     .pbar-label { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 4px; }
     .pbar { height: 10px; background: var(--border); border-radius: 999px; overflow: hidden; }
-    .pbar-fill { height: 100%; border-radius: 999px; background: var(--primary); transition: width .4s; }
-    /* ── FOOTER ── */
+    .pbar-fill { height: 100%; border-radius: 999px; transition: width .4s; }
     footer {
       background: var(--text); color: #94a3b8;
       text-align: center; padding: 32px 24px;
       font-size: .88rem; margin-top: 60px;
     }
     footer strong { color: #e2e8f0; }
-    /* ── PRINT ── */
+    footer .footer-team { margin-top: 10px; font-size: .82rem; opacity: .7; }
     @media print {
       .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .chart-wrap, .card, .tbl-wrap { break-inside: avoid; }
@@ -176,14 +186,24 @@
 
 <!-- ═══════════════════════ HERO ═══════════════════════ -->
 <div class="hero">
-  <h1>Predição de Risco — Câncer do Colo do Útero</h1>
-  <p>Análise exploratória de dados, pré-processamento, modelagem com Random Forest e Transfer Learning
-     sobre o dataset coletado no Hospital Universitário de Caracas, Venezuela.</p>
+  <div class="subtitle">FIAP — Pós-Graduação IA Para Desenvolvedores &nbsp;|&nbsp; Tech Challenge Fase 1</div>
+  <h1>Predição de Risco<br>Câncer do Colo do Útero</h1>
+  <p>Análise exploratória, pré-processamento e modelagem com Random Forest sobre dados clínicos
+     do Hospital Universitário de Caracas, Venezuela.</p>
   <div class="hero-meta">
     <span>858 Pacientes</span>
     <span>36 Variáveis Originais</span>
     <span>Target: Biopsia</span>
-    <span>Linguagem: Python / Scikit-learn</span>
+    <span>Python · Scikit-learn</span>
+    <span>Acurácia: 94%</span>
+  </div>
+  <div class="team-box">
+    <div class="team-title">Equipe</div>
+    <div class="team-member"><strong>Jefferson Antônio Pantoja Silva</strong>jeffkd35@gmail.com</div>
+    <div class="team-member"><strong>Wilson Lima da Silva</strong>wilson.slima@gmail.com</div>
+    <div class="team-member"><strong>Gustavo Lopes da Silva</strong>gustavo_lsilva@hotmail.com</div>
+    <div class="team-member"><strong>Felipe Soeiro Lopes</strong>felipesoeiro.contato@outlook.com.br</div>
+    <div class="team-member"><strong>Vinicius Tavares Sousa da Silva</strong>viniciustavares2014@gmail.com</div>
   </div>
 </div>
 
@@ -196,10 +216,8 @@
       <li><a href="#s1">Visão Geral do Dataset</a></li>
       <li><a href="#s2">Análise Exploratória dos Dados (EDA)</a></li>
       <li><a href="#s3">Pré-processamento e Engenharia de Features</a></li>
-      <li><a href="#s4">Modelagem — Random Forest Baseline</a></li>
-      <li><a href="#s5">Modelagem — Transfer Learning</a></li>
-      <li><a href="#s6">Comparação de Resultados</a></li>
-      <li><a href="#s7">Discussão e Conclusões</a></li>
+      <li><a href="#s4">Modelagem — Random Forest com Pipeline</a></li>
+      <li><a href="#s5">Discussão e Conclusões</a></li>
     </ol>
   </div>
 
@@ -215,9 +233,9 @@
       <div class="callout-body">
         <strong>O que é este dataset?</strong>
         O dataset <em>"Risk Factors Cervical Cancer"</em> foi coletado no Hospital Universitário de Caracas,
-        Venezuela. Contém informações demográficas, hábitos, histórico médico e resultados de exames de
-        858 pacientes. O objetivo é identificar quais pacientes apresentam maior risco para o câncer do
-        colo do útero, auxiliando na triagem clínica.
+        Venezuela, e está disponível no UCI Machine Learning Repository. Contém informações demográficas,
+        hábitos, histórico médico e resultados de exames de 858 pacientes. O objetivo é identificar quais
+        pacientes apresentam maior risco para o câncer do colo do útero, auxiliando na triagem clínica.
       </div>
     </div>
 
@@ -233,7 +251,7 @@
         <div class="card-sub">Colunas brutas</div>
       </div>
       <div class="card success">
-        <div class="card-label">Variáveis Alvo (Targets)</div>
+        <div class="card-label">Variáveis Alvo</div>
         <div class="card-value">4</div>
         <div class="card-sub">Hinselmann, Schiller, Citologia, Biópsia</div>
       </div>
@@ -262,11 +280,12 @@
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <strong>Dataset Desbalanceado</strong>
+        <strong>Dataset Fortemente Desbalanceado</strong>
         Todos os quatro exames apresentam taxas de positividade muito baixas (entre 4% e 9%).
-        Isso é esperado em triagem clínica, mas torna o aprendizado de máquina desafiador —
-        o modelo tende a "cheirar" tudo como negativo e ainda assim acertar 94% das vezes.
-        Por isso usamos o parâmetro <code>class_weight</code> para penalizar erros na classe positiva.
+        Isso é esperado em triagem clínica, mas torna o aprendizado de máquina desafiador:
+        um modelo ingênuo que prediz "sempre negativo" já alcança ~94% de acurácia.
+        Por isso, foi utilizado o parâmetro <code>class_weight={0:1, 1:14}</code> no Random Forest
+        para penalizar erros na classe positiva.
       </div>
     </div>
 
@@ -322,7 +341,6 @@
       A EDA revela as distribuições, padrões e possíveis problemas antes do pré-processamento.
     </p>
 
-    <!-- Estatísticas descritivas -->
     <div class="chart-row">
       <div class="chart-wrap">
         <h3>Distribuição de Idade das Pacientes</h3>
@@ -337,14 +355,14 @@
     <div class="callout info">
       <div class="callout-icon">📊</div>
       <div class="callout-body">
-        <strong>Observação — Distribuição Etária</strong>
-        A idade média é 26,8 anos com desvio padrão de 8,5. Existe assimetria à direita:
-        há pacientes mais velhas (até 84 anos) puxando a média. A maioria das pacientes é jovem.
-        A idade mínima de 13 anos pode indicar casos reais ou erros de registro.
+        <strong>Observações sobre o Perfil das Pacientes</strong>
+        A idade média é 26,8 anos (dp = 8,5). Existe assimetria positiva: pacientes mais velhas (até 84 anos)
+        puxam a média. A maioria das pacientes é jovem (13–27 anos). A idade mínima de 13 anos pode indicar
+        casos reais ou erros de registro. O número de parceiros sexuais tem mediana 2, mas com outliers fortes
+        (máximo 28), o que gera assimetria considerável.
       </div>
     </div>
 
-    <!-- Dados faltantes -->
     <div class="chart-wrap">
       <h3>Percentual de Dados Faltantes por Grupo de Variáveis</h3>
       <canvas id="chartMissing" height="110"></canvas>
@@ -354,13 +372,13 @@
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
         <strong>Por que existem dados faltantes?</strong>
-        Algumas pacientes optaram por não responder certas perguntas por preocupações com privacidade.
-        Isso é especialmente verdade para questões sobre hábitos sexuais e DSTs. No dataset original,
-        esses valores foram preenchidos com o caractere "?" e tratados como valores nulos na análise.
+        Pacientes optaram por não responder certas perguntas por privacidade — especialmente sobre hábitos
+        sexuais e DSTs. No dataset original, esses valores foram preenchidos com "?" e tratados como
+        <code>NaN</code> na análise. As colunas <strong>STDs: Time since first/last diagnosis</strong>
+        têm mais de 91% de dados faltantes — apenas 71 pacientes com diagnóstico de DST responderam.
       </div>
     </div>
 
-    <!-- Tabela estatísticas -->
     <div class="tbl-wrap">
       <table>
         <thead>
@@ -374,7 +392,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>Idade</td><td>858</td><td>26,8</td><td>8,5</td><td>13</td><td>84</td></tr>
+          <tr><td>Idade</td><td>858 (100%)</td><td>26,8</td><td>8,5</td><td>13</td><td>84</td></tr>
           <tr><td>Nº de Parceiros Sexuais</td><td>832 (97%)</td><td>2,5</td><td>1,7</td><td>1</td><td>28</td></tr>
           <tr><td>Primeira Relação Sexual (anos)</td><td>851 (99%)</td><td>17,0</td><td>2,8</td><td>10</td><td>32</td></tr>
           <tr><td>Número de Gestações</td><td>802 (93%)</td><td>2,3</td><td>1,4</td><td>0</td><td>11</td></tr>
@@ -383,14 +401,15 @@
           <tr><td>DIU (0/1)</td><td>741 (86%)</td><td>11,2%</td><td>—</td><td>0</td><td>1</td></tr>
           <tr><td>DST (0/1)</td><td>753 (88%)</td><td>10,5%</td><td>—</td><td>0</td><td>1</td></tr>
           <tr><td>DST — 1º diagnóstico (anos)</td><td>71 (8%)</td><td>6,1</td><td>5,9</td><td>1</td><td>22</td></tr>
+          <tr><td><strong>Biopsia (target)</strong></td><td>858 (100%)</td><td>6,4%</td><td>—</td><td>0</td><td>1</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="chart-row">
       <div class="chart-wrap">
-        <h3>Taxa de Uso de Contraceptivos e Hábitos</h3>
-        <canvas id="chartHabitos" height="200"></canvas>
+        <h3>Distribuição Biópsia: Saudável vs. Câncer</h3>
+        <canvas id="chartBiopsia" height="200"></canvas>
       </div>
       <div class="chart-wrap">
         <h3>Prevalência de DSTs no Dataset</h3>
@@ -401,10 +420,22 @@
     <div class="callout bad">
       <div class="callout-icon">🔍</div>
       <div class="callout-body">
+        <strong>Correlações Fracas — Problema Não Linear</strong>
+        A matriz de correlação mostrou que nenhum atributo isolado tem correlação forte com a Biópsia.
+        Os atributos com maior correlação positiva foram: <em>STDs:genital herpes</em> (0,13),
+        <em>STDs:HIV</em> (0,12), <em>STDs: Time since first diagnosis_respondido</em> (0,11)
+        e <em>STDs</em> (0,11). Isso confirma que o problema é essencialmente não linear e requer
+        modelos capazes de capturar interações complexas entre variáveis.
+      </div>
+    </div>
+
+    <div class="callout bad">
+      <div class="callout-icon">🗑️</div>
+      <div class="callout-body">
         <strong>Colunas Removidas por Falta de Variabilidade</strong>
-        As colunas <code>STDs:AIDS</code> e <code>STDs:condylomatosis cervical</code> foram removidas
+        As colunas <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> foram removidas
         porque TODOS os 858 registros tinham valor 0. Colunas sem variabilidade não contribuem para o
-        modelo — na verdade, podem introduzir ruído e aumentar o custo computacional.
+        modelo e podem introduzir ruído.
       </div>
     </div>
   </div>
@@ -417,376 +448,186 @@
     </div>
 
     <p style="margin-bottom:22px; color:var(--muted);">
-      Estratégias adotadas para tratar valores faltantes, reduzir redundância e criar features úteis.
+      Todo o pré-processamento foi encapsulado em um sklearn <strong>Pipeline</strong>,
+      garantindo que as mesmas transformações sejam aplicadas consistentemente no treino e no teste.
     </p>
 
     <ul class="steps">
       <li>
         <div>
-          <strong>Leitura com tratamento de valores faltantes</strong><br>
-          O dataset foi lido novamente usando <code>na_values='?'</code>, convertendo todos os
-          pontos de interrogação para <code>NaN</code> do Pandas — facilitando as operações
-          estatísticas subsequentes.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Indicadores de Missing (Missing Indicators)</strong><br>
-          Para cada coluna com dados faltantes, foi criada uma nova coluna binária
-          (<code>_preenchido</code>: 1 = respondeu, 0 = não respondeu). Isso preserva a informação
-          de que a paciente se recusou a responder, o que pode ser um sinal estatisticamente relevante.
-          A coluna original foi então imputada com a média.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Agrupamento de colunas indicadoras redundantes</strong><br>
-          Foi verificado que várias colunas <code>_preenchido</code> tinham exatamente os mesmos
-          valores (ex.: todas as variáveis de DST tinham 87,76% de respostas válidas). Essas
-          colunas duplicadas foram consolidadas em uma única coluna representativa por grupo.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Feature Engineering — Tabagismo</strong><br>
-          As colunas <code>Smokes (years)</code> e <code>Smokes (packs/year)</code> foram
-          multiplicadas criando <code>smoke_year_packs</code> (exposição acumulada ao tabaco).
-          Antes, foi garantida a consistência: se <code>Smokes = 0</code>, os outros campos
-          também foram zerados.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Consistência dos Contraceptivos</strong><br>
-          Se <code>Hormonal Contraceptives = 0</code>, então
-          <code>Hormonal Contraceptives (years)</code> também foi zerado para evitar
-          inconsistências nos dados.
-        </div>
-      </li>
-      <li>
-        <div>
           <strong>Remoção de colunas sem variabilidade</strong><br>
-          <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> foram removidas por
-          conter apenas zeros em todos os 858 registros.
+          <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> removidas — 858 valores iguais a zero.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Tratamento de valores nulos + Missing Indicators</strong><br>
+          Para cada coluna com <code>NaN</code>: criada coluna <code>_preenchido</code> (1=respondeu, 0=não respondeu)
+          e valores nulos substituídos pela média. Preserva a informação de recusa — estatisticamente relevante.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Agrupamento de colunas indicadoras idênticas</strong><br>
+          Colunas com exatamente o mesmo padrão de resposta (ex.: todas as 11 variáveis de DST com 87,76% de respostas)
+          foram consolidadas em uma única coluna <code>_respondido</code>, reduzindo dimensionalidade.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Redução de redundância — Tabagismo</strong><br>
+          <code>Smokes (years)</code> × <code>Smokes (packs/year)</code> combinados em
+          <code>smoke_year_packs</code> (exposição acumulada). Se <code>Smokes=0</code>, os outros campos são zerados.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Transformação logarítmica em variáveis demográficas</strong><br>
+          <code>log1p</code> aplicado em: <em>Age, Number of sexual partners, First sexual intercourse,
+          Num of pregnancies</em>. Reduz o impacto de outliers e normaliza distribuições assimétricas.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Feature Engineering — Contraceptivos</strong><br>
+          Criadas: <code>contraceptive_mid_risk</code> (uso entre 3–15 anos) e
+          <code>contraceptive_exposure</code> (usa × anos de uso). Consistência garantida: se <code>HC=0</code>,
+          anos de uso zerado.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Remoção de redundância entre STDs temporais</strong><br>
+          <code>STDs: Time since first diagnosis</code> removida — apresentava redundância quase perfeita
+          com <code>STDs: Time since last diagnosis</code> (correlação diagonal nos gráficos de dispersão).
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Criação de atributos estratégicos combinados</strong><br>
+          <code>sexual_risk</code> (parceiros/idade), <code>smoke_age_risk</code>, <code>has_std</code>,
+          <code>std_age_risk</code>, <code>combined_risk</code>. Testados, mas com ganho marginal de correlação.
         </div>
       </li>
     </ul>
 
     <div class="chart-wrap" style="margin-top:28px;">
-      <h3>Visão Geral — Grupos de Missing Indicators Criados</h3>
+      <h3>Taxa de Resposta por Grupo de Variáveis</h3>
       <canvas id="chartMissingGroups" height="100"></canvas>
     </div>
 
     <div class="callout ok">
       <div class="callout-icon">✅</div>
       <div class="callout-body">
-        <strong>Por que usar a média + indicador de missing?</strong>
-        Simplesmente remover linhas com dados faltantes reduziria muito o tamanho do dataset (já
-        pequeno com 858 amostras). Usar apenas a média "apagaria" a informação de recusa.
-        A combinação média + coluna indicadora permite ao modelo aprender tanto o valor imputado
-        quanto o comportamento de não-resposta — uma abordagem mais rica.
+        <strong>Resultado do Pré-processamento</strong>
+        Após o pipeline, o dataset passou de 29 colunas para aproximadamente 42 features enriquecidas,
+        sem nenhum valor nulo. A correlação com a Biópsia não apresentou ganho linear significativo
+        (ganho máximo de +0.01 após transformações), confirmando que o modelo precisa capturar
+        relações não lineares — objetivo alcançado pelo Random Forest.
       </div>
     </div>
 
     <div class="tbl-wrap">
       <table>
         <thead>
-          <tr><th>Grupo de Colunas</th><th>% Respondidas</th><th>% Faltantes</th><th>Coluna Indicadora</th></tr>
+          <tr><th>Grupo de Colunas</th><th>% Respondidas</th><th>% Faltantes</th><th>Coluna Indicadora Criada</th></tr>
         </thead>
         <tbody>
           <tr><td>Variáveis de DST (11 colunas)</td><td>87,8%</td><td>12,2%</td><td><code>STDs_respondido</code></td></tr>
-          <tr><td>Contraceptivos Hormonais + DIU</td><td>86–87%</td><td>13–14%</td><td><code>Hormonal Contraceptives_respondido</code> / <code>IUD_respondido</code></td></tr>
-          <tr><td>Hábitos de Fumo</td><td>98,5%</td><td>1,5%</td><td><code>Smokes_respondido</code></td></tr>
+          <tr><td>Contraceptivos Hormonais</td><td>87,4%</td><td>12,6%</td><td><code>Hormonal Contraceptives_respondido</code></td></tr>
+          <tr><td>DIU</td><td>86,4%</td><td>13,6%</td><td><code>IUD_respondido</code></td></tr>
           <tr><td>Número de Gestações</td><td>93,5%</td><td>6,5%</td><td><code>Num of pregnancies_respondido</code></td></tr>
-          <tr><td>Tempo desde diagnóstico de DST</td><td>8,3%</td><td>91,7%</td><td><code>STDs: Time since first diagnosis_respondido</code></td></tr>
+          <tr><td>Hábitos de Fumo</td><td>98,5%</td><td>1,5%</td><td><code>Smokes_respondido</code></td></tr>
+          <tr><td>Tempo desde diagnóstico DST</td><td>8,3%</td><td><strong>91,7%</strong></td><td><code>STDs: Time since first diagnosis_respondido</code></td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ═══════════ SEÇÃO 4 — BASELINE ═══════════ -->
+  <!-- ═══════════ SEÇÃO 4 — MODELAGEM ═══════════ -->
   <div class="section" id="s4">
     <div class="section-header">
       <div class="section-num">4</div>
-      <h2>Modelagem — Random Forest Baseline</h2>
+      <h2>Modelagem — Random Forest com Pipeline</h2>
     </div>
 
     <div class="callout info">
       <div class="callout-icon">🌲</div>
       <div class="callout-body">
-        <strong>O que é Random Forest?</strong>
-        Random Forest é um algoritmo de aprendizado de máquina baseado em múltiplas Árvores de
-        Decisão treinadas em amostras e features aleatórias do conjunto de treino. A predição final
-        é a votação majoritária entre todas as árvores. É robusto a overfitting, lida bem com
-        dados mistos e é difícil de bater em conjuntos de dados tabulares de tamanho moderado.
+        <strong>Por que Random Forest?</strong>
+        Random Forest é um ensemble de múltiplas Árvores de Decisão treinadas em subamostras aleatórias
+        (bagging). É robusto a outliers, lida nativamente com dados mistos (binários + contínuos),
+        não exige normalização e captura relações não lineares. O parâmetro <code>class_weight</code>
+        permite compensar o desbalanceamento sem oversampling — fundamental para este dataset onde
+        os positivos são apenas 6,4%.
       </div>
     </div>
 
-    <h3 style="margin-bottom:14px;">Configuração do Modelo</h3>
+    <h3 style="margin-bottom:14px;">Configuração do Modelo e Split</h3>
     <div class="tbl-wrap">
       <table>
-        <thead><tr><th>Parâmetro</th><th>Valor</th><th>Motivo</th></tr></thead>
+        <thead><tr><th>Parâmetro</th><th>Valor</th><th>Justificativa</th></tr></thead>
         <tbody>
-          <tr><td><code>class_weight</code></td><td>{0: 1, 1: 14}</td><td>Penaliza mais os erros na classe positiva (câncer), compensando o desbalanceamento ~1:14</td></tr>
+          <tr><td><code>class_weight</code></td><td>{0: 1, 1: 14}</td><td>Penaliza 14× mais os erros na classe positiva — reflete o desequilíbrio ~1:14 no dataset</td></tr>
           <tr><td><code>random_state</code></td><td>42</td><td>Reprodutibilidade dos resultados</td></tr>
-          <tr><td><code>test_size</code></td><td>0.2 (20%)</td><td>172 amostras no teste, 686 no treino</td></tr>
-          <tr><td><code>stratify</code></td><td>y (Biopsy)</td><td>Mantém proporção da classe positiva no split</td></tr>
+          <tr><td><code>test_size</code></td><td>20% (172 amostras)</td><td>80% treino (686) / 20% teste (172)</td></tr>
+          <tr><td><code>stratify=y</code></td><td>Biopsy</td><td>Mantém proporção de positivos (6,4%) no split de treino e teste</td></tr>
+          <tr><td>Pipeline</td><td>sklearn Pipeline</td><td>Garante que pré-processamento seja aplicado corretamente no teste sem data leakage</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h3 style="margin-bottom:16px; margin-top:8px;">Resultados do Baseline</h3>
+    <h3 style="margin-bottom:16px; margin-top:8px;">Resultados do Modelo</h3>
 
     <div class="metric-grid">
       <div class="metric-cell">
         <div class="m-label">Acurácia Geral</div>
         <div class="m-val" style="color:var(--success)">94%</div>
-        <div class="m-class">172 amostras</div>
+        <div class="m-class">172 amostras de teste</div>
       </div>
       <div class="metric-cell">
-        <div class="m-label">Precisão (Classe +)</div>
+        <div class="m-label">Precisão (Câncer)</div>
         <div class="m-val" style="color:var(--warning)">50%</div>
-        <div class="m-class">Predições positivas</div>
+        <div class="m-class">Das predições positivas</div>
       </div>
       <div class="metric-cell">
-        <div class="m-label">Recall (Classe +)</div>
+        <div class="m-label">Recall (Câncer)</div>
         <div class="m-val" style="color:var(--danger)">9%</div>
-        <div class="m-class">Casos reais detectados</div>
+        <div class="m-class">Casos reais capturados</div>
       </div>
       <div class="metric-cell">
-        <div class="m-label">F1-Score (Classe +)</div>
+        <div class="m-label">F1-Score (Câncer)</div>
         <div class="m-val" style="color:var(--danger)">0,15</div>
-        <div class="m-class">Harmônica P × R</div>
+        <div class="m-class">Harmônica Precisão × Recall</div>
       </div>
     </div>
 
     <div class="chart-wrap">
-      <h3>Classification Report — Baseline (Classe 0: Saudável | Classe 1: Biopsia Positiva)</h3>
+      <h3>Classification Report — Classe 0: Saudável | Classe 1: Biopsia Positiva</h3>
       <canvas id="chartBaseline" height="100"></canvas>
+    </div>
+
+    <div class="chart-wrap">
+      <h3>Desempenho por Classe — Visão Radar</h3>
+      <canvas id="chartRadar" height="200"></canvas>
     </div>
 
     <div class="callout bad">
       <div class="callout-icon">🔴</div>
       <div class="callout-body">
         <strong>O problema do Recall baixo na classe positiva</strong>
-        Um Recall de apenas 9% na classe positiva significa que o modelo identificou corretamente
-        apenas 1 de cada 11 casos reais de câncer no conjunto de teste. Isso é crítico em aplicações
-        médicas: <strong>falsos negativos (perder um caso de câncer) são muito mais perigosos que
-        falsos positivos (alarmes desnecessários)</strong>. O alto <code>class_weight</code> ajudou
-        parcialmente, mas o dataset pequeno e muito desbalanceado limita o desempenho.
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════ SEÇÃO 5 — TRANSFER LEARNING ═══════════ -->
-  <div class="section" id="s5">
-    <div class="section-header">
-      <div class="section-num">5</div>
-      <h2>Modelagem — Transfer Learning com Exames Auxiliares</h2>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">🧠</div>
-      <div class="callout-body">
-        <strong>O que é Transfer Learning neste contexto?</strong>
-        Transfer Learning (aprendizado por transferência) normalmente é usado em Deep Learning
-        para aproveitar pesos de redes pré-treinadas. Aqui, a abordagem foi adaptada para dados
-        tabulares: treinar modelos auxiliares nos outros exames (Hinselmann, Schiller, Citologia)
-        e usar as probabilidades preditas como <em>novas features</em> para o modelo final de Biópsia.
-        A intuição é que esses exames clínicos compartilham fatores de risco comuns.
+        Recall de 9% significa que o modelo identificou corretamente apenas 1 de cada 11 casos reais
+        de câncer no conjunto de teste. Em aplicações médicas, <strong>falsos negativos são muito mais
+        perigosos que falsos positivos</strong> — perder um caso de câncer pode custar uma vida.
+        O <code>class_weight=14</code> ajudou parcialmente, mas o dataset pequeno (55 positivos totais,
+        apenas 11 no teste) limita estruturalmente o desempenho.
       </div>
     </div>
 
-    <h3 style="margin-bottom:14px;">Arquitetura da Solução</h3>
-
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px;text-align:center;">
-      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;align-items:center;">
-        <div style="background:var(--primary-light);border:2px solid var(--primary);border-radius:10px;padding:14px 18px;min-width:150px;">
-          <div style="font-weight:700;color:var(--primary);font-size:.9rem;">Features Originais</div>
-          <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">X_train</div>
-        </div>
-        <div style="font-size:2rem;color:var(--primary);">→</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="background:var(--accent-light);border:2px solid var(--accent);border-radius:10px;padding:10px 16px;font-size:.85rem;font-weight:700;color:var(--accent);">RF Hinselmann</div>
-          <div style="background:var(--accent-light);border:2px solid var(--accent);border-radius:10px;padding:10px 16px;font-size:.85rem;font-weight:700;color:var(--accent);">RF Schiller</div>
-          <div style="background:var(--accent-light);border:2px solid var(--accent);border-radius:10px;padding:10px 16px;font-size:.85rem;font-weight:700;color:var(--accent);">RF Citologia</div>
-        </div>
-        <div style="font-size:2rem;color:var(--primary);">→</div>
-        <div style="background:#fef3c7;border:2px solid var(--warning);border-radius:10px;padding:14px 18px;min-width:160px;">
-          <div style="font-weight:700;color:var(--warning);font-size:.9rem;">Features Enriquecidas</div>
-          <div style="font-size:.78rem;color:var(--muted);margin-top:4px;">X + prob_hinselmann<br>+ prob_schiller<br>+ prob_citology</div>
-        </div>
-        <div style="font-size:2rem;color:var(--primary);">→</div>
-        <div style="background:var(--success-light);border:2px solid var(--success);border-radius:10px;padding:14px 18px;min-width:150px;">
-          <div style="font-weight:700;color:var(--success);font-size:.9rem;">RF Final (Biópsia)</div>
-          <div style="font-size:.8rem;color:var(--muted);margin-top:4px;">Predição final</div>
-        </div>
-      </div>
-    </div>
-
-    <h3 style="margin-bottom:16px;">Resultados — Transfer Learning</h3>
-
-    <div class="metric-grid">
-      <div class="metric-cell">
-        <div class="m-label">Acurácia Geral</div>
-        <div class="m-val" style="color:var(--success)">94%</div>
-        <div class="m-class">172 amostras</div>
-      </div>
-      <div class="metric-cell">
-        <div class="m-label">Precisão (Classe +)</div>
-        <div class="m-val" style="color:var(--warning)">50%</div>
-        <div class="m-class">Predições positivas</div>
-      </div>
-      <div class="metric-cell">
-        <div class="m-label">Recall (Classe +)</div>
-        <div class="m-val" style="color:var(--danger)">9%</div>
-        <div class="m-class">Casos reais detectados</div>
-      </div>
-      <div class="metric-cell">
-        <div class="m-label">F1-Score (Classe +)</div>
-        <div class="m-val" style="color:var(--danger)">0,15</div>
-        <div class="m-class">Harmônica P × R</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════ SEÇÃO 6 — COMPARAÇÃO ═══════════ -->
-  <div class="section" id="s6">
-    <div class="section-header">
-      <div class="section-num">6</div>
-      <h2>Comparação de Resultados</h2>
-    </div>
-
-    <div class="chart-wrap">
-      <h3>Métricas Comparativas — Baseline vs Transfer Learning (Classe Positiva)</h3>
-      <canvas id="chartComparacao" height="110"></canvas>
-    </div>
-
-    <div class="tbl-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Métrica</th>
-            <th>Classe</th>
-            <th>Baseline RF</th>
-            <th>Transfer Learning</th>
-            <th>Δ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Acurácia</td><td>Global</td><td>94%</td><td>94%</td><td><span class="badge green">= Igual</span></td></tr>
-          <tr><td>Precisão</td><td>Negativa (0)</td><td>94%</td><td>94%</td><td><span class="badge green">= Igual</span></td></tr>
-          <tr><td>Recall</td><td>Negativa (0)</td><td>99%</td><td>99%</td><td><span class="badge green">= Igual</span></td></tr>
-          <tr><td>F1-Score</td><td>Negativa (0)</td><td>0,97</td><td>0,97</td><td><span class="badge green">= Igual</span></td></tr>
-          <tr><td>Precisão</td><td>Positiva (1)</td><td>50%</td><td>50%</td><td><span class="badge yellow">= Igual</span></td></tr>
-          <tr><td>Recall</td><td>Positiva (1)</td><td>9%</td><td>9%</td><td><span class="badge yellow">= Igual</span></td></tr>
-          <tr><td>F1-Score</td><td>Positiva (1)</td><td>0,15</td><td>0,15</td><td><span class="badge yellow">= Igual</span></td></tr>
-          <tr><td>Suporte Teste</td><td>Positiva (1)</td><td>11 casos</td><td>11 casos</td><td>—</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout warn">
-      <div class="callout-icon">🤔</div>
-      <div class="callout-body">
-        <strong>Por que o Transfer Learning não melhorou?</strong>
-        O resultado idêntico entre os dois modelos pode ser explicado por:
-        <ul style="margin-top:8px;padding-left:18px;">
-          <li>O dataset é muito pequeno (858 amostras, apenas 11 positivos no teste);</li>
-          <li>Os modelos auxiliares já utilizavam as mesmas features originais, então a informação adicionada é redundante;</li>
-          <li>Com apenas 11 positivos no conjunto de teste, qualquer variação de 1–2 casos muda completamente as métricas;</li>
-          <li>O Random Forest Baseline já era capaz de explorar as correlações entre as variáveis internas.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="chart-wrap">
-      <h3>Desempenho por Classe — Visualização do Classification Report</h3>
-      <canvas id="chartReport" height="110"></canvas>
-    </div>
-  </div>
-
-  <!-- ═══════════ SEÇÃO 7 — DISCUSSÃO ═══════════ -->
-  <div class="section" id="s7">
-    <div class="section-header">
-      <div class="section-num">7</div>
-      <h2>Discussão e Conclusões</h2>
-    </div>
-
-    <h3 style="margin-bottom:12px;">7.1 — Discussão da Análise Exploratória</h3>
-    <div class="callout info" style="margin-bottom:20px;">
-      <div class="callout-icon">📈</div>
-      <div class="callout-body">
-        O dataset apresenta perfil de pacientes jovens (média 26,8 anos), com
-        baixa prevalência de DSTs e tabagismo. O principal desafio identificado foi o
-        desbalanceamento extremo das classes alvo: a Biópsia positiva representa apenas 6,4%
-        dos casos. As altas taxas de dados faltantes em variáveis sensíveis (DSTs, contraceptivos)
-        sugerem que a privacidade impactou a qualidade dos dados coletados.
-      </div>
-    </div>
-
-    <h3 style="margin-bottom:12px;">7.2 — Estratégias de Pré-processamento</h3>
-    <div class="callout ok" style="margin-bottom:20px;">
-      <div class="callout-icon">⚙️</div>
-      <div class="callout-body">
-        A imputação por média combinada com indicadores de missing preserva a informação de
-        comportamento de não-resposta. A engenharia da feature <code>smoke_year_packs</code>
-        agrega a exposição cumulativa ao tabaco de forma mais informativa. A remoção de variáveis
-        sem variabilidade evita ruído no modelo.
-      </div>
-    </div>
-
-    <h3 style="margin-bottom:12px;">7.3 — Modelos Utilizados e Por Quê</h3>
-    <div class="tbl-wrap" style="margin-bottom:20px;">
-      <table>
-        <thead><tr><th>Modelo</th><th>Justificativa</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>Random Forest (Baseline)</td>
-            <td>Robusto a outliers e variáveis irrelevantes. Suporta dados mistos (binários + contínuos).
-                O parâmetro class_weight compensa o desbalanceamento sem precisar de oversampling.</td>
-          </tr>
-          <tr>
-            <td>Transfer Learning (RF Auxiliares)</td>
-            <td>Abordagem inovadora para dados tabulares: aproveita o sinal clínico de exames
-                correlatos (Hinselmann, Schiller, Citologia) para enriquecer as features do
-                modelo principal (Biópsia). Justificada pela correlação clínica entre os exames.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3 style="margin-bottom:12px;">7.4 — Resultados e Interpretação</h3>
-    <div class="callout bad" style="margin-bottom:16px;">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <strong>Alta Acurácia ≠ Bom Modelo para Triagem Médica</strong>
-        O modelo atingiu 94% de acurácia — mas isso é enganoso. Como apenas 6,4% dos casos
-        são positivos, um modelo que <em>nunca prediz positivo</em> já acerta 93,6% das vezes.
-        O verdadeiro problema está no <strong>Recall de 9%</strong> para a classe positiva:
-        o modelo perde 91% dos casos reais de câncer, o que é inaceitável para triagem clínica.
-      </div>
-    </div>
-
-    <div class="callout ok" style="margin-bottom:16px;">
-      <div class="callout-icon">💡</div>
-      <div class="callout-body">
-        <strong>O que melhoraria os resultados?</strong>
-        <ul style="margin-top:8px;padding-left:18px;">
-          <li>Técnicas de oversampling (SMOTE) para balancear as classes;</li>
-          <li>Ajuste do threshold de decisão (por ex. usar probabilidade > 0.3 em vez de > 0.5);</li>
-          <li>Mais dados — 858 amostras com 55 positivos é muito limitado;</li>
-          <li>Otimização de hiperparâmetros com GridSearchCV ou Optuna;</li>
-          <li>Avaliação por AUC-ROC e Curva Precisão-Recall em vez de acurácia.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Progresso visual de cada dimensão do projeto -->
-    <h3 style="margin-bottom:16px;">Resumo Final dos Resultados</h3>
+    <h3 style="margin-bottom:16px; margin-top:8px;">Resumo Visual das Métricas</h3>
     <div class="chart-wrap">
       <div class="pbar-row">
-        <div class="pbar-label"><span>Acurácia Global do Modelo</span><span>94%</span></div>
+        <div class="pbar-label"><span>Acurácia Global</span><span>94%</span></div>
         <div class="pbar"><div class="pbar-fill" style="width:94%;background:var(--success)"></div></div>
       </div>
       <div class="pbar-row">
@@ -794,11 +635,15 @@
         <div class="pbar"><div class="pbar-fill" style="width:99%;background:var(--success)"></div></div>
       </div>
       <div class="pbar-row">
+        <div class="pbar-label"><span>Precisão — Classe Negativa (Saudável)</span><span>94%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:94%;background:var(--success)"></div></div>
+      </div>
+      <div class="pbar-row">
         <div class="pbar-label"><span>Precisão — Classe Positiva (Câncer)</span><span>50%</span></div>
         <div class="pbar"><div class="pbar-fill" style="width:50%;background:var(--warning)"></div></div>
       </div>
       <div class="pbar-row">
-        <div class="pbar-label"><span>Recall — Classe Positiva (Câncer) ⚠️</span><span>9%</span></div>
+        <div class="pbar-label"><span>Recall — Classe Positiva (Câncer) ⚠️ crítico</span><span>9%</span></div>
         <div class="pbar"><div class="pbar-fill" style="width:9%;background:var(--danger)"></div></div>
       </div>
       <div class="pbar-row">
@@ -808,234 +653,244 @@
     </div>
   </div>
 
-</div><!-- /container -->
+  <!-- ═══════════ SEÇÃO 5 — DISCUSSÃO ═══════════ -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Discussão e Conclusões</h2>
+    </div>
+
+    <h3 style="margin-bottom:12px;">5.1 — Discussão da Análise Exploratória</h3>
+    <div class="callout info" style="margin-bottom:20px;">
+      <div class="callout-icon">📈</div>
+      <div class="callout-body">
+        O dataset apresenta pacientes jovens (média 26,8 anos), baixa prevalência de DSTs (10,5%) e
+        tabagismo (14,6%). Mais da metade usa contraceptivos hormonais (64,1%). O principal desafio
+        identificado foi o desbalanceamento extremo das classes: a Biópsia positiva representa apenas 6,4%
+        dos casos (55 de 858). As altas taxas de dados faltantes em variáveis sensíveis confirmam que
+        privacidade impactou a qualidade da coleta. Nenhum atributo isolado apresentou correlação forte
+        com a Biópsia — confirmando a natureza não linear do problema.
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">5.2 — Estratégias de Pré-processamento</h3>
+    <div class="callout ok" style="margin-bottom:20px;">
+      <div class="callout-icon">⚙️</div>
+      <div class="callout-body">
+        A imputação por média combinada com Missing Indicators preservou a informação de não-resposta,
+        que pode ser um sinal de comportamento do paciente. O agrupamento de indicadores idênticos
+        reduziu dimensionalidade sem perda de informação. A engenharia de features (<code>smoke_year_packs</code>,
+        <code>contraceptive_exposure</code>, <code>sexual_risk</code>) criou representações mais ricas,
+        embora com ganho marginal de correlação linear. A transformação log1p suavizou outliers nas
+        variáveis demográficas.
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:12px;">5.3 — Modelo e Justificativa</h3>
+    <div class="tbl-wrap" style="margin-bottom:20px;">
+      <table>
+        <thead><tr><th>Aspecto</th><th>Decisão</th><th>Justificativa</th></tr></thead>
+        <tbody>
+          <tr><td>Algoritmo</td><td>Random Forest</td><td>Robusto a outliers, dados mistos, relações não lineares e overfitting</td></tr>
+          <tr><td>Desbalanceamento</td><td>class_weight={0:1, 1:14}</td><td>Reflete a proporção real ~1:14 sem oversampling</td></tr>
+          <tr><td>Avaliação</td><td>Classification Report (Precisão, Recall, F1)</td><td>Acurácia é enganosa com classes desbalanceadas</td></tr>
+          <tr><td>Pipeline</td><td>sklearn Pipeline completo</td><td>Evita data leakage e garante reprodutibilidade</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-bottom:12px;">5.4 — Limitações e Próximos Passos</h3>
+    <div class="callout warn" style="margin-bottom:16px;">
+      <div class="callout-icon">🚧</div>
+      <div class="callout-body">
+        <strong>Limitações Identificadas</strong>
+        <ul style="margin-top:8px;padding-left:18px;">
+          <li>Dataset pequeno: 858 registros com apenas 55 positivos limita o aprendizado da classe minoritária;</li>
+          <li>Recall de 9% é inadequado para triagem médica — onde falsos negativos têm consequências graves;</li>
+          <li>Alta taxa de dados faltantes (>91%) nas variáveis temporais de DST reduz seu poder preditivo;</li>
+          <li>Dataset de 2003: padrões clínicos podem ter mudado com o tempo.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout ok">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>O que melhoraria os resultados?</strong>
+        <ul style="margin-top:8px;padding-left:18px;">
+          <li><strong>SMOTE</strong> ou outros métodos de oversampling para balancear as classes no treino;</li>
+          <li><strong>Ajuste de threshold</strong>: usar probabilidade >0,30 em vez de >0,50 para aumentar o Recall;</li>
+          <li><strong>Otimização de hiperparâmetros</strong>: GridSearchCV ou Optuna para n_estimators, max_depth, min_samples_leaf;</li>
+          <li><strong>Avaliação por AUC-ROC</strong> e Curva Precisão-Recall em vez de acurácia;</li>
+          <li><strong>Mais dados</strong>: coletar mais casos positivos ou usar datasets externos complementares;</li>
+          <li><strong>Outros algoritmos</strong>: XGBoost, LightGBM ou redes neurais para capturar relações mais complexas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <footer>
   <strong>Predição de Risco — Câncer do Colo do Útero</strong><br>
+  FIAP — Pós-Graduação IA Para Desenvolvedores | Tech Challenge Fase 1<br>
   Dataset: UCI Machine Learning Repository — Hospital Universitário de Caracas, Venezuela<br>
-  Desenvolvido em Python · Pandas · Scikit-learn · Matplotlib · Seaborn
+  Python · Pandas · Scikit-learn · Matplotlib · Seaborn
+  <div class="footer-team">
+    Jefferson Antônio Pantoja Silva &nbsp;·&nbsp; Wilson Lima da Silva &nbsp;·&nbsp;
+    Gustavo Lopes da Silva &nbsp;·&nbsp; Felipe Soeiro Lopes &nbsp;·&nbsp; Vinicius Tavares Sousa da Silva
+  </div>
 </footer>
 
-<!-- ═══════════════ SCRIPTS DOS GRÁFICOS ═══════════════ -->
 <script>
-const paleta = {
-  roxo:   '#7c3aed',
-  rosa:   '#db2777',
-  verde:  '#059669',
-  laranja:'#d97706',
-  azul:   '#0284c7',
+const p = {
+  roxo:    '#7c3aed',
+  rosa:    '#db2777',
+  verde:   '#059669',
+  laranja: '#d97706',
+  azul:    '#0284c7',
   vermelho:'#dc2626',
-  cinza:  '#94a3b8',
+  cinza:   '#94a3b8',
 };
 
-// 1 — Distribuição dos Targets
 new Chart(document.getElementById('chartTargets'), {
   type: 'bar',
   data: {
-    labels: ['Hinselmann', 'Schiller', 'Citologia', 'Biopsia (target principal)'],
-    datasets: [{
-      label: 'Positivos (%)',
-      data: [4.1, 8.6, 5.1, 6.4],
-      backgroundColor: [paleta.azul, paleta.laranja, paleta.roxo, paleta.rosa],
-      borderRadius: 8,
-    },{
-      label: 'Negativos (%)',
-      data: [95.9, 91.4, 94.9, 93.6],
-      backgroundColor: ['#dbeafe','#fef3c7','#ede9fe','#fce7f3'],
-      borderRadius: 8,
-    }]
+    labels: ['Hinselmann','Schiller','Citologia','Biopsia (target principal)'],
+    datasets: [
+      { label: 'Positivos (%)', data: [4.1, 8.6, 5.1, 6.4],
+        backgroundColor: [p.azul, p.laranja, p.roxo, p.rosa], borderRadius: 8 },
+      { label: 'Negativos (%)', data: [95.9, 91.4, 94.9, 93.6],
+        backgroundColor: ['#dbeafe','#fef3c7','#ede9fe','#fce7f3'], borderRadius: 8 }
+    ]
   },
   options: {
     responsive: true,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } }
-    },
+    scales: { x: { stacked: true }, y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } } },
     plugins: { legend: { position: 'top' } }
   }
 });
 
-// 2 — Distribuição de Idade
 new Chart(document.getElementById('chartIdade'), {
   type: 'bar',
   data: {
     labels: ['13–17','18–22','23–27','28–32','33–37','38–42','43–47','48–52','53+'],
-    datasets: [{
-      label: 'Nº de Pacientes',
+    datasets: [{ label: 'Nº de Pacientes',
       data: [52, 210, 218, 150, 95, 60, 35, 20, 18],
-      backgroundColor: paleta.roxo,
-      borderRadius: 6,
-    }]
+      backgroundColor: p.roxo, borderRadius: 6 }]
   },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true } }
-  }
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
 });
 
-// 3 — Parceiros Sexuais
 new Chart(document.getElementById('chartParceiros'), {
   type: 'bar',
   data: {
     labels: ['1','2','3','4','5','6+'],
-    datasets: [{
-      label: 'Proporção de Pacientes',
+    datasets: [{ label: 'Proporção (%)',
       data: [28, 32, 20, 10, 5, 5],
-      backgroundColor: [paleta.azul, paleta.roxo, paleta.rosa, paleta.laranja, paleta.vermelho, paleta.cinza],
-      borderRadius: 6,
-    }]
+      backgroundColor: [p.azul, p.roxo, p.rosa, p.laranja, p.vermelho, p.cinza], borderRadius: 6 }]
   },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { ticks: { callback: v => v + '%' } } }
-  }
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
 });
 
-// 4 — Missing Data
 new Chart(document.getElementById('chartMissing'), {
   type: 'bar',
   data: {
     labels: [
-      'Temp. desde 1º diagnóst.','Temp. desde últ. diagnóst.','DIU (anos)','DIU',
-      'Contrac. Hormonal (anos)','Contrac. Hormonal','Nº gestações',
-      'Fumo (anos)','Fumo (packs/ano)','Parceiros Sexuais','Prim. relação sexual'
+      'Tempo 1º diagnóst. DST','Tempo últ. diagnóst. DST','DIU','DIU (anos)',
+      'Contrac. Hormonal','Contrac. Hormonal (anos)','Gestações',
+      'Parceiros Sexuais','Fumo','Prim. relação sexual'
     ],
-    datasets: [{
-      label: '% Faltante',
-      data: [91.7, 91.7, 13.6, 13.6, 12.6, 12.6, 6.5, 1.5, 1.5, 3.0, 0.8],
-      backgroundColor: d => {
-        const vals = [91.7, 91.7, 13.6, 13.6, 12.6, 12.6, 6.5, 1.5, 1.5, 3.0, 0.8];
-        return d.raw > 50 ? paleta.vermelho : d.raw > 10 ? paleta.laranja : paleta.azul;
+    datasets: [{ label: '% Faltante',
+      data: [91.7, 91.7, 13.6, 13.6, 12.6, 12.6, 6.5, 3.0, 1.5, 0.8],
+      backgroundColor: ctx => {
+        const v = ctx.raw;
+        return v > 50 ? p.vermelho : v > 10 ? p.laranja : p.azul;
       },
-      borderRadius: 6,
-    }]
+      borderRadius: 6 }]
   },
   options: {
-    indexAxis: 'y',
-    responsive: true,
+    indexAxis: 'y', responsive: true,
     plugins: { legend: { display: false } },
     scales: { x: { max: 100, ticks: { callback: v => v + '%' } } }
   }
 });
 
-// 5 — Hábitos
-new Chart(document.getElementById('chartHabitos'), {
+new Chart(document.getElementById('chartBiopsia'), {
   type: 'doughnut',
   data: {
-    labels: ['Usa Contrac. Hormonal','Não usa','DIU','Não usa DIU','Fuma','Não Fuma'],
-    datasets: [{
-      data: [64.1, 35.9, 11.2, 88.8, 14.6, 85.4],
-      backgroundColor: [paleta.roxo,'#ede9fe',paleta.azul,'#dbeafe',paleta.rosa,'#fce7f3'],
-      borderWidth: 2,
-      borderColor: '#fff',
-    }]
+    labels: ['Saudável (93,6%)', 'Câncer (6,4%)'],
+    datasets: [{ data: [803, 55],
+      backgroundColor: [p.verde, p.vermelho],
+      borderColor: '#fff', borderWidth: 3 }]
   },
   options: {
     responsive: true,
-    plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } }
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} pacientes` } }
+    }
   }
 });
 
-// 6 — DSTs
 new Chart(document.getElementById('chartDSTs'), {
   type: 'bar',
   data: {
-    labels: ['Condiloma','Sífilis','HIV','Hep. B','HPV','DST (qualquer)'],
-    datasets: [{
-      label: '% de Pacientes Afetadas',
-      data: [5.8, 2.4, 2.4, 0.1, 0.3, 10.5],
-      backgroundColor: paleta.vermelho,
-      borderRadius: 6,
-    }]
+    labels: ['Condiloma\nvulvo-perineal','Condiloma\nvaginal','Sífilis','HIV','Herpes Genital','HPV','Hep. B','DST (qualquer)'],
+    datasets: [{ label: '% de Pacientes',
+      data: [5.7, 0.5, 2.4, 2.4, 0.1, 0.3, 0.1, 10.5],
+      backgroundColor: p.vermelho, borderRadius: 6 }]
   },
-  options: {
-    responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { y: { ticks: { callback: v => v + '%' } } }
-  }
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
 });
 
-// 7 — Missing Groups
 new Chart(document.getElementById('chartMissingGroups'), {
   type: 'bar',
   data: {
-    labels: ['Grupo DST\n(87,8%)', 'Contrac. Hormonal\n(87,4%)', 'DIU\n(86,4%)', 'Gestações\n(93,5%)', 'Fumo\n(98,5%)', 'Tempo Diag.\n(8,3%)'],
+    labels: ['DSTs\n(87,8%)', 'Contrac. Horm.\n(87,4%)', 'DIU\n(86,4%)', 'Gestações\n(93,5%)', 'Fumo\n(98,5%)', 'Tempo Diag.\n(8,3%)'],
     datasets: [
-      {
-        label: '% Responderam',
-        data: [87.8, 87.4, 86.4, 93.5, 98.5, 8.3],
-        backgroundColor: paleta.verde,
-        borderRadius: 6,
-      },
-      {
-        label: '% Não Responderam',
-        data: [12.2, 12.6, 13.6, 6.5, 1.5, 91.7],
-        backgroundColor: paleta.vermelho,
-        borderRadius: 6,
-      }
+      { label: '% Responderam', data: [87.8, 87.4, 86.4, 93.5, 98.5, 8.3], backgroundColor: p.verde, borderRadius: 6 },
+      { label: '% Não Responderam', data: [12.2, 12.6, 13.6, 6.5, 1.5, 91.7], backgroundColor: p.vermelho, borderRadius: 6 }
     ]
   },
   options: {
     responsive: true,
-    scales: {
-      x: { stacked: true },
-      y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } }
-    },
+    scales: { x: { stacked: true }, y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } } },
     plugins: { legend: { position: 'top' } }
   }
 });
 
-// 8 — Baseline Chart
 new Chart(document.getElementById('chartBaseline'), {
   type: 'bar',
   data: {
     labels: ['Precisão','Recall','F1-Score'],
     datasets: [
-      { label: 'Classe 0 — Saudável',    data: [0.94, 0.99, 0.97], backgroundColor: paleta.verde,    borderRadius: 6 },
-      { label: 'Classe 1 — Biopsia +',   data: [0.50, 0.09, 0.15], backgroundColor: paleta.vermelho, borderRadius: 6 },
+      { label: 'Classe 0 — Saudável',  data: [0.94, 0.99, 0.97], backgroundColor: p.verde,    borderRadius: 6 },
+      { label: 'Classe 1 — Biopsia +', data: [0.50, 0.09, 0.15], backgroundColor: p.vermelho, borderRadius: 6 }
     ]
   },
   options: {
     responsive: true,
-    scales: { y: { min: 0, max: 1 } },
+    scales: { y: { min: 0, max: 1, ticks: { callback: v => (v*100).toFixed(0) + '%' } } },
     plugins: { legend: { position: 'top' } }
   }
 });
 
-// 9 — Comparação Baseline vs TL
-new Chart(document.getElementById('chartComparacao'), {
-  type: 'bar',
-  data: {
-    labels: ['Precisão (Cl. +)', 'Recall (Cl. +)', 'F1 (Cl. +)', 'Acurácia', 'F1 (Cl. -)'],
-    datasets: [
-      { label: 'Baseline', data: [0.50, 0.09, 0.15, 0.94, 0.97], backgroundColor: paleta.roxo, borderRadius: 6 },
-      { label: 'Transfer Learning', data: [0.50, 0.09, 0.15, 0.94, 0.97], backgroundColor: paleta.rosa, borderRadius: 6 },
-    ]
-  },
-  options: {
-    responsive: true,
-    scales: { y: { min: 0, max: 1 } },
-    plugins: { legend: { position: 'top' } }
-  }
-});
-
-// 10 — Report Completo
-new Chart(document.getElementById('chartReport'), {
+new Chart(document.getElementById('chartRadar'), {
   type: 'radar',
   data: {
-    labels: ['Precisão Cl. 0','Recall Cl. 0','F1 Cl. 0','Acurácia','Precisão Cl. 1','Recall Cl. 1','F1 Cl. 1'],
-    datasets: [
-      { label: 'Baseline', data: [0.94,0.99,0.97,0.94,0.50,0.09,0.15],
-        borderColor: paleta.roxo, backgroundColor: paleta.roxo+'33', pointBackgroundColor: paleta.roxo },
-      { label: 'Transfer Learning', data: [0.94,0.99,0.97,0.94,0.50,0.09,0.15],
-        borderColor: paleta.rosa, backgroundColor: paleta.rosa+'33', borderDash:[6,3], pointBackgroundColor: paleta.rosa },
-    ]
+    labels: ['Precisão\nCl. Saudável','Recall\nCl. Saudável','F1\nCl. Saudável','Acurácia\nGeral','Precisão\nCl. Câncer','Recall\nCl. Câncer','F1\nCl. Câncer'],
+    datasets: [{
+      label: 'Random Forest',
+      data: [0.94, 0.99, 0.97, 0.94, 0.50, 0.09, 0.15],
+      borderColor: p.roxo,
+      backgroundColor: p.roxo + '33',
+      pointBackgroundColor: p.roxo,
+      pointRadius: 5
+    }]
   },
   options: {
     responsive: true,
-    scales: { r: { min: 0, max: 1, ticks: { stepSize: 0.2 } } },
+    scales: { r: { min: 0, max: 1, ticks: { stepSize: 0.25, callback: v => (v*100) + '%' } } },
     plugins: { legend: { position: 'top' } }
   }
 });
