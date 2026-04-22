@@ -32,7 +32,7 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 | Nome | Risk Factors for Cervical Cancer |
 | Fonte | UCI Machine Learning Repository |
 | Link | https://archive.ics.uci.edu/dataset/383/cervical+cancer+risk+factors |
-| Arquivo local | `risk_factors_cervical_cancer.csv` |
+| Arquivo local | `data/risk_factors_cervical_cancer.csv` |
 | Tamanho | 858 pacientes × 36 variáveis |
 | Classe positiva (câncer) | 55 pacientes (6%) |
 | Classe negativa (saudável) | 803 pacientes (94%) |
@@ -130,12 +130,16 @@ weighted avg       0.91      0.94      0.91       172
 
 ```
 tech-challenge-fase1/
-├── risk_factors_cervical_cancer.csv   # Dataset original (UCI)
-├── init_cervical_cancer.ipynb         # Notebook principal com análise e modelo
-├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
-├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
-├── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
-└── README.md                          # Este arquivo
+├── data/
+│   └── risk_factors_cervical_cancer.csv   # Dataset original (UCI)
+├── notebooks/
+│   └── init_cervical_cancer.ipynb         # Notebook principal com análise e modelo
+├── reports/
+│   ├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
+│   ├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
+│   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
+├── scripts/                               # Scripts Python (em desenvolvimento)
+└── README.md                              # Este arquivo
 ```
 
 ---
@@ -175,14 +179,14 @@ pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 ### 4. ▶️ Executar o notebook
 
 ```bash
-jupyter notebook init_cervical_cancer.ipynb
+jupyter notebook notebooks/init_cervical_cancer.ipynb
 ```
 
 Ou, se preferir JupyterLab:
 
 ```bash
 pip install jupyterlab
-jupyter lab init_cervical_cancer.ipynb
+jupyter lab notebooks/init_cervical_cancer.ipynb
 ```
 
 ### 5. ⚡ Executar todas as células
@@ -191,14 +195,14 @@ No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline 
 
 ### 6. 🌐 Visualizar o relatório HTML
 
-Abra o arquivo `relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
+Abra o arquivo `reports/relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
 
 ### 7. 📄 Relatório técnico (ABNT)
 
 O relatório técnico já está disponível no repositório em dois formatos:
 
-- `relatorio_tecnico_abnt.pdf` — abra diretamente em qualquer leitor de PDF.
-- `relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
+- `reports/relatorio_tecnico_abnt.pdf` — abra diretamente em qualquer leitor de PDF.
+- `reports/relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
 
 ---
 
