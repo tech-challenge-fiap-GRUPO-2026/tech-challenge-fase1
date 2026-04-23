@@ -1,0 +1,4 @@
+services:
+  app:
+    build: .
+    container_name: tech-challenge-app-fase-1

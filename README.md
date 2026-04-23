@@ -138,7 +138,7 @@ tech-challenge-fase1/
 │   ├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
 │   ├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
 │   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
-├── scripts/                               # Scripts Python (em desenvolvimento)
+├── app/                               # Scripts Python (em desenvolvimento)
 └── README.md                              # Este arquivo
 ```
 
