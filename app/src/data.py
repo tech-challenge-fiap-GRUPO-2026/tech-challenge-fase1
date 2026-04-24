@@ -21,9 +21,18 @@ class LoadData:
         return dataset
 
     def get_dataset(self):
-        self.ui_helper.display_header(
-            f'Lendo o dataset a partir do caminho: {self.path}'
+        self.ui_helper.display_markdown(
+            f'**Lendo o dataset a partir do caminho:** {self.path}'
         )
-        dataset = pd.read_csv(self.path, na_values='?')
+        self.ui_helper.display_divider()
+        dataset = pd.read_csv(
+            self.path,
+            na_values='?'
+        )
+        self.ui_helper.display_text(
+            'Dataset Original com valores do tipo NA/NaN representados por "?" :'
+        )
+        self.ui_helper.display_dataframe(dataset)
+        self.ui_helper.display_divider()
         dataset = self.__handle_missing_values(dataset)
         return dataset

@@ -57,6 +57,9 @@ class ModelTestTraining(object):
         return pipeline
     
     def train_test(self):
+        self.ui_helper.display_header('Treinamento e Teste do Modelo')
+        self.ui_helper.display_divider()
+
         X_train, X_test, y_train, y_test = train_test_split(
             self.X,
             self.y,
@@ -64,11 +67,32 @@ class ModelTestTraining(object):
             stratify=self.y,
             random_state=self.random_state
         )
+
+        self.ui_helper.display_markdown(
+            f'**Valor do Random State:** {self.random_state} '
+        )
+        self.ui_helper.display_markdown(
+            f'**Porcentagem utilizada para testes:** {"{:.2f}%".format(self.test_size * 100)} '
+        )
+        self.ui_helper.display_markdown(
+            f'**Tamanho do conjunto de treinamento:** {len(X_train)} amostras'
+        )
+        self.ui_helper.display_markdown(
+            f'**Tamanho do conjunto de teste:** {len(X_test)} amostras'
+        )
+
+        self.ui_helper.display_divider()
+        self.ui_helper.display_subheader("Etapas do Pipeline:")
+        self.ui_helper.display_json(self.pipeline.named_steps)
+        self.ui_helper.display_divider()
+
         self.pipeline.fit(
             X_train,
             y_train
         )
+
         y_pred = self.pipeline.predict(X_test)
         report = classification_report(y_test, y_pred)
-        self.ui_helper.display_text("Classification Report:")
-        self.ui_helper.display_text(report)
+
+        self.ui_helper.display_subheader("Relatório de Classificação:")
+        self.ui_helper.display_code(report, wrap_lines=True)
