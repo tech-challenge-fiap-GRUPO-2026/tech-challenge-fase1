@@ -51,7 +51,8 @@ if __name__ == '__main__':
         targets=TARGETS,
         cols_remove=COLS_REMOVE
     )
-    df = load_data.get_dataset()
+    
+    df = load_data.get_dataset_treated()
     
     model_test_training = ModelTestTraining(
         dataset=df,

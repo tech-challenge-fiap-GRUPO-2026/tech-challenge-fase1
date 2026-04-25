@@ -80,6 +80,13 @@ class ModelTestTraining(object):
         self.ui_helper.display_markdown(
             f'**Tamanho do conjunto de teste:** {len(X_test)} amostras'
         )
+        self.ui_helper.display_divider()
+
+        self.ui_helper.display_markdown("Dados de Treinamento:")
+        self.ui_helper.display_dataframe(X_train)
+
+        self.ui_helper.display_markdown("Dados de Teste:")
+        self.ui_helper.display_dataframe(X_test)
 
         self.ui_helper.display_divider()
         self.ui_helper.display_subheader("Etapas do Pipeline:")
