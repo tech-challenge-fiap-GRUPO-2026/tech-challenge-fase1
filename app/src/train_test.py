@@ -5,6 +5,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.tree import DecisionTreeClassifier
 # from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from app.src.pipeline_functions import (
@@ -45,14 +46,17 @@ class ModelTestTraining(object):
             ('faltantes', FunctionTransformer(tratar_missing_com_indicador)),
             ('agrupar', FunctionTransformer(agrupar_colunas_preenchido)),
             ('tabagismo_redundancia', FunctionTransformer(reduzir_redundancia_smokes)),
-            # ('discretizar_demo_comp', FunctionTransformer(discretizar_demograficos_comportamentais)), # Ao discretizar perdeu-se informação útil e piorou a classificação
             ('transformar_demo_comp', FunctionTransformer(transformar_demograficos_comportamentais)),
             ('contraceptivos', FunctionTransformer(transformar_contraceptivos)),
             ('remover_std_tempo', FunctionTransformer(remover_coluna_std_tempo)),
             ('novos_atributos', FunctionTransformer(criar_atributos_estrategicos)),
-            # ('scaler', MinMaxScaler()),
-            # ('model', KNeighborsClassifier(n_neighbors=5))
-            ('model', RandomForestClassifier(class_weight={0:1, 1:14},random_state=self.random_state))
+            # ('smote', SMOTE(random_state=42)), # Funciona melhor sem SMOTE
+            ('model', DecisionTreeClassifier(
+                class_weight={0:1, 1:10}, # Funciona melhor penalizando os erros (sem SMOTE)
+                max_depth=4,
+                min_samples_leaf=5,
+                random_state=self.random_state
+            ))
         ])
         return pipeline
     
