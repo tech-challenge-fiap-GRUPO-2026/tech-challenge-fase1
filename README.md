@@ -95,34 +95,33 @@ O notebook implementa um pipeline sklearn com as seguintes etapas:
 
 ---
 
-## 🤖 Modelo
+## 🤖 Modelos Avaliados
 
-- **Algoritmo:** Random Forest Classifier (scikit-learn)
-- **Configuração:** `class_weight={0: 1, 1: 14}` para compensar o desbalanceamento
-- **Divisão:** 80% treino / 20% teste (`stratify=y`, `random_state=42`)
+Foram testados três cenários progressivos de modelagem:
+
+### 1. Random Forest — Baseline (sem oversampling)
+- **Algoritmo:** RandomForestClassifier · `class_weight={0: 1, 1: 14}`
+- **Divisão:** 80% treino / 20% teste · `stratify=y` · `random_state=42`
+
+### 2. Random Forest — Com SMOTE + Ajuste de Threshold ⭐ melhor resultado
+- **Pipeline:** mesmo pré-processamento + SMOTE (oversampling da classe minoritária)
+- **Threshold ajustado:** 0.41 (em vez do padrão 0.50)
+
+### 3. Árvore de Decisão — Com SMOTE
+- **Algoritmo:** DecisionTreeClassifier · `class_weight={0: 1, 1: 14}`
+- **GridSearchCV** para otimização de hiperparâmetros
 
 ---
 
-## 📈 Resultados
+## 📈 Resultados Comparativos
 
-```
-              precision    recall  f1-score   support
+| Modelo | Precisão (câncer) | Recall (câncer) | F1 (câncer) | Acurácia | AUROC |
+|--------|:-----------------:|:---------------:|:-----------:|:--------:|:-----:|
+| RF Baseline | 50% | 9% | 0.15 | 94% | — |
+| **RF + SMOTE + Threshold 0.41** | **31%** | **36%** | **0.33** | **91%** | **0.737** |
+| Árvore de Decisão + SMOTE | 22% | 36% | 0.28 | 88% | 0.624 |
 
-           0       0.94      0.99      0.97       161   (saudável)
-           1       0.50      0.09      0.15        11   (câncer)
-
-    accuracy                           0.94       172
-   macro avg       0.72      0.54      0.56       172
-weighted avg       0.91      0.94      0.91       172
-```
-
-| Classe | Precisão | Recall | F1-Score |
-|--------|----------|--------|----------|
-| ✅ Saudável (0) | 94% | 99% | 0.97 |
-| 🔴 Câncer (1) | 50% | 9% | 0.15 |
-| **🎯 Acurácia geral** | — | — | **94%** |
-
-> 💡 **Observação:** O baixo Recall na classe positiva (9%) indica que o modelo ainda perde a maioria dos casos reais de biópsia positiva. Isso é esperado dado o forte desbalanceamento (6% de casos positivos). Estratégias de melhoria incluem SMOTE, ajuste de threshold de decisão e coleta de mais dados rotulados.
+> 💡 **Conclusão:** O melhor resultado foi obtido com **Random Forest + SMOTE + threshold ajustado (0.41)**, que elevou o Recall de 9% para 36%. O dataset possui baixo poder preditivo intrínseco — o pré-processamento melhorou a importância das features, mas não a capacidade discriminatória do modelo. O uso de SMOTE, embora eficaz tecnicamente, não é bem-visto pela comunidade médica. A Árvore de Decisão apresentou AUROC inferior (0.62), confirmando o Random Forest como algoritmo mais adequado para este problema.
 
 ---
 
@@ -133,12 +132,24 @@ tech-challenge-fase1/
 ├── data/
 │   └── risk_factors_cervical_cancer.csv   # Dataset original (UCI)
 ├── notebooks/
-│   └── init_cervical_cancer.ipynb         # Notebook principal com análise e modelo
+│   └── init_cervical_cancer.ipynb         # Notebook principal com análise e modelos
 ├── reports/
 │   ├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
 │   ├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
 │   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
-├── app/                               # Scripts Python (em desenvolvimento)
+├── app/
+│   ├── __init__.py
+│   ├── main.py                            # Ponto de entrada da aplicação Streamlit
+│   └── src/
+│       ├── data.py                        # Carregamento e tratamento do dataset
+│       ├── pipeline_functions.py          # Funções de pré-processamento do pipeline
+│       ├── streamlit_helper.py            # Componentes de UI (Streamlit)
+│       └── train_test.py                  # Treinamento e avaliação dos modelos
+├── Dockerfile                             # Imagem Docker da aplicação
+├── docker-compose.yml                     # Orquestração dos containers
+├── requirements.txt                       # Dependências Python
+├── run_app.sh                             # Script de execução (Linux/Mac)
+├── run_app.cmd                            # Script de execução (Windows)
 └── README.md                              # Este arquivo
 ```
 
@@ -173,7 +184,7 @@ venv\Scripts\activate
 ### 3. 📦 Instalar as dependências
 
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+pip install -r requirements.txt
 ```
 
 ### 4. ▶️ Executar o notebook
@@ -193,11 +204,31 @@ jupyter lab notebooks/init_cervical_cancer.ipynb
 
 No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline completo do início ao fim.
 
-### 6. 🌐 Visualizar o relatório HTML
+### 6. 🖥️ Executar a aplicação Streamlit
+
+**Via script (recomendado):**
+
+```bash
+# Linux / Mac
+bash run_app.sh
+
+# Windows
+run_app.cmd
+```
+
+**Via Docker:**
+
+```bash
+docker-compose up --build
+```
+
+Acesse em: `http://localhost:8501`
+
+### 7. 🌐 Visualizar o relatório HTML
 
 Abra o arquivo `reports/relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
 
-### 7. 📄 Relatório técnico (ABNT)
+### 8. 📄 Relatório técnico (ABNT)
 
 O relatório técnico já está disponível no repositório em dois formatos:
 
@@ -214,5 +245,7 @@ O relatório técnico já está disponível no repositório em dois formatos:
 | numpy | >= 1.23 | Operações numéricas e transformações |
 | matplotlib | >= 3.6 | Visualizações e gráficos |
 | seaborn | >= 0.12 | Heatmap de correlação e histogramas |
-| scikit-learn | >= 1.2 | Pipeline, Random Forest, métricas, split |
+| scikit-learn | >= 1.2 | Pipeline, Random Forest, Decision Tree, métricas, GridSearchCV |
+| imbalanced-learn | >= 0.10 | SMOTE — oversampling da classe minoritária |
+| streamlit | >= 1.20 | Interface web interativa da aplicação |
 | jupyter | >= 1.0 | Ambiente de notebooks interativos |

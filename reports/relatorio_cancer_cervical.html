@@ -194,8 +194,9 @@
     <span>858 Pacientes</span>
     <span>36 Variáveis Originais</span>
     <span>Target: Biopsia</span>
-    <span>Python · Scikit-learn</span>
-    <span>Acurácia: 94%</span>
+    <span>Python · Scikit-learn · Streamlit</span>
+    <span>AUROC: 0.737</span>
+    <span>Recall câncer: 36%</span>
   </div>
   <div class="team-box">
     <div class="team-title">Equipe</div>
@@ -216,7 +217,7 @@
       <li><a href="#s1">Visão Geral do Dataset</a></li>
       <li><a href="#s2">Análise Exploratória dos Dados (EDA)</a></li>
       <li><a href="#s3">Pré-processamento e Engenharia de Features</a></li>
-      <li><a href="#s4">Modelagem — Random Forest com Pipeline</a></li>
+      <li><a href="#s4">Modelagem — Comparativo de Modelos</a></li>
       <li><a href="#s5">Discussão e Conclusões</a></li>
     </ol>
   </div>
@@ -548,37 +549,29 @@
   <div class="section" id="s4">
     <div class="section-header">
       <div class="section-num">4</div>
-      <h2>Modelagem — Random Forest com Pipeline</h2>
+      <h2>Modelagem — Comparativo de Modelos</h2>
     </div>
 
     <div class="callout info">
-      <div class="callout-icon">🌲</div>
+      <div class="callout-icon">🔬</div>
       <div class="callout-body">
-        <strong>Por que Random Forest?</strong>
-        Random Forest é um ensemble de múltiplas Árvores de Decisão treinadas em subamostras aleatórias
-        (bagging). É robusto a outliers, lida nativamente com dados mistos (binários + contínuos),
-        não exige normalização e captura relações não lineares. O parâmetro <code>class_weight</code>
-        permite compensar o desbalanceamento sem oversampling — fundamental para este dataset onde
-        os positivos são apenas 6,4%.
+        <strong>Estratégia de Experimentação</strong>
+        Foram testados três cenários progressivos para superar o recall crítico de 9% do baseline:
+        <strong>(1) RF baseline</strong> (só class_weight),
+        <strong>(2) RF + SMOTE + threshold ajustado</strong> e
+        <strong>(3) Árvore de Decisão + SMOTE</strong>. A divisão foi sempre 80/20 com stratify na Biopsia.
       </div>
     </div>
 
-    <h3 style="margin-bottom:14px;">Configuração do Modelo e Split</h3>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Parâmetro</th><th>Valor</th><th>Justificativa</th></tr></thead>
-        <tbody>
-          <tr><td><code>class_weight</code></td><td>{0: 1, 1: 14}</td><td>Penaliza 14× mais os erros na classe positiva — reflete o desequilíbrio ~1:14 no dataset</td></tr>
-          <tr><td><code>random_state</code></td><td>42</td><td>Reprodutibilidade dos resultados</td></tr>
-          <tr><td><code>test_size</code></td><td>20% (172 amostras)</td><td>80% treino (686) / 20% teste (172)</td></tr>
-          <tr><td><code>stratify=y</code></td><td>Biopsy</td><td>Mantém proporção de positivos (6,4%) no split de treino e teste</td></tr>
-          <tr><td>Pipeline</td><td>sklearn Pipeline</td><td>Garante que pré-processamento seja aplicado corretamente no teste sem data leakage</td></tr>
-        </tbody>
-      </table>
+    <!-- ─── Modelo 1 ─── -->
+    <h3 style="margin-bottom:10px; margin-top:24px;">Modelo 1 — Random Forest Baseline</h3>
+    <div class="callout info" style="margin-bottom:16px;">
+      <div class="callout-icon">🌲</div>
+      <div class="callout-body">
+        Random Forest com <code>class_weight={0:1, 1:14}</code> e pipeline sklearn completo.
+        Boa acurácia global, mas recall da classe positiva de apenas 9% — insuficiente para triagem médica.
+      </div>
     </div>
-
-    <h3 style="margin-bottom:16px; margin-top:8px;">Resultados do Modelo</h3>
-
     <div class="metric-grid">
       <div class="metric-cell">
         <div class="m-label">Acurácia Geral</div>
@@ -598,57 +591,130 @@
       <div class="metric-cell">
         <div class="m-label">F1-Score (Câncer)</div>
         <div class="m-val" style="color:var(--danger)">0,15</div>
-        <div class="m-class">Harmônica Precisão × Recall</div>
+        <div class="m-class">Harmônica P × R</div>
       </div>
     </div>
 
+    <!-- ─── Modelo 2 ─── -->
+    <h3 style="margin-bottom:10px; margin-top:32px;">Modelo 2 — Random Forest + SMOTE + Threshold 0.41 ⭐</h3>
+    <div class="callout ok" style="margin-bottom:16px;">
+      <div class="callout-icon">🚀</div>
+      <div class="callout-body">
+        SMOTE balanceou as classes no treino. O threshold de decisão foi ajustado de 0.50 para <strong>0.41</strong>,
+        aumentando o recall de 9% para <strong>36%</strong> — melhora de 4×. AUROC de <strong>0.737</strong>
+        confirma poder discriminatório moderado. Melhor resultado obtido neste projeto.
+      </div>
+    </div>
+    <div class="metric-grid">
+      <div class="metric-cell">
+        <div class="m-label">Acurácia Geral</div>
+        <div class="m-val" style="color:var(--warning)">91%</div>
+        <div class="m-class">172 amostras de teste</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">Precisão (Câncer)</div>
+        <div class="m-val" style="color:var(--warning)">31%</div>
+        <div class="m-class">Das predições positivas</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">Recall (Câncer)</div>
+        <div class="m-val" style="color:var(--warning)">36%</div>
+        <div class="m-class">Casos reais capturados</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">AUROC</div>
+        <div class="m-val" style="color:var(--success)">0,737</div>
+        <div class="m-class">Poder discriminatório</div>
+      </div>
+    </div>
+
+    <!-- ─── Modelo 3 ─── -->
+    <h3 style="margin-bottom:10px; margin-top:32px;">Modelo 3 — Árvore de Decisão + SMOTE</h3>
+    <div class="callout warn" style="margin-bottom:16px;">
+      <div class="callout-icon">🌿</div>
+      <div class="callout-body">
+        Árvore de Decisão com <code>class_weight={0:1, 1:14}</code> + SMOTE + GridSearchCV.
+        Recall igual ao RF+SMOTE (36%), porém AUROC de apenas 0.624 — resultado considerado fraco.
+        A alteração de threshold não trouxe melhoria adicional.
+      </div>
+    </div>
+    <div class="metric-grid">
+      <div class="metric-cell">
+        <div class="m-label">Acurácia Geral</div>
+        <div class="m-val" style="color:var(--danger)">88%</div>
+        <div class="m-class">172 amostras de teste</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">Precisão (Câncer)</div>
+        <div class="m-val" style="color:var(--danger)">22%</div>
+        <div class="m-class">Das predições positivas</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">Recall (Câncer)</div>
+        <div class="m-val" style="color:var(--warning)">36%</div>
+        <div class="m-class">Casos reais capturados</div>
+      </div>
+      <div class="metric-cell">
+        <div class="m-label">AUROC</div>
+        <div class="m-val" style="color:var(--danger)">0,624</div>
+        <div class="m-class">Poder discriminatório</div>
+      </div>
+    </div>
+
+    <!-- ─── Comparativo ─── -->
+    <h3 style="margin-bottom:16px; margin-top:32px;">Comparativo Visual dos Modelos</h3>
     <div class="chart-wrap">
-      <h3>Classification Report — Classe 0: Saudável | Classe 1: Biopsia Positiva</h3>
+      <h3>Recall na Classe Positiva (Câncer) — por Modelo</h3>
+      <canvas id="chartComparativo" height="100"></canvas>
+    </div>
+
+    <div class="chart-wrap">
+      <h3>Classification Report — RF Baseline vs RF+SMOTE+Threshold</h3>
       <canvas id="chartBaseline" height="100"></canvas>
     </div>
 
     <div class="chart-wrap">
-      <h3>Desempenho por Classe — Visão Radar</h3>
-      <canvas id="chartRadar" height="200"></canvas>
+      <h3>AUROC por Modelo</h3>
+      <canvas id="chartAuroc" height="80"></canvas>
     </div>
 
     <div class="callout bad">
       <div class="callout-icon">🔴</div>
       <div class="callout-body">
-        <strong>O problema do Recall baixo na classe positiva</strong>
-        Recall de 9% significa que o modelo identificou corretamente apenas 1 de cada 11 casos reais
-        de câncer no conjunto de teste. Em aplicações médicas, <strong>falsos negativos são muito mais
-        perigosos que falsos positivos</strong> — perder um caso de câncer pode custar uma vida.
-        O <code>class_weight=14</code> ajudou parcialmente, mas o dataset pequeno (55 positivos totais,
-        apenas 11 no teste) limita estruturalmente o desempenho.
+        <strong>Por que o Recall ainda é baixo mesmo com SMOTE?</strong>
+        O SMOTE gera exemplos sintéticos da classe minoritária no espaço de features, mas não adiciona
+        informação real. Com apenas 55 casos positivos reais (11 no teste), o limite estrutural do dataset
+        não pode ser superado apenas com técnicas de balanceamento. O pré-processamento melhorou a
+        importância das features engineered, porém o dataset não possui poder preditivo suficiente
+        para uso clínico real.
       </div>
     </div>
 
-    <h3 style="margin-bottom:16px; margin-top:8px;">Resumo Visual das Métricas</h3>
+    <h3 style="margin-bottom:16px; margin-top:8px;">Resumo Visual — Melhor Modelo (RF + SMOTE + Threshold 0.41)</h3>
     <div class="chart-wrap">
       <div class="pbar-row">
-        <div class="pbar-label"><span>Acurácia Global</span><span>94%</span></div>
+        <div class="pbar-label"><span>Acurácia Global</span><span>91%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:91%;background:var(--success)"></div></div>
+      </div>
+      <div class="pbar-row">
+        <div class="pbar-label"><span>Recall — Classe Negativa (Saudável)</span><span>94%</span></div>
         <div class="pbar"><div class="pbar-fill" style="width:94%;background:var(--success)"></div></div>
       </div>
       <div class="pbar-row">
-        <div class="pbar-label"><span>Recall — Classe Negativa (Saudável)</span><span>99%</span></div>
-        <div class="pbar"><div class="pbar-fill" style="width:99%;background:var(--success)"></div></div>
+        <div class="pbar-label"><span>Precisão — Classe Negativa (Saudável)</span><span>95%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:95%;background:var(--success)"></div></div>
       </div>
       <div class="pbar-row">
-        <div class="pbar-label"><span>Precisão — Classe Negativa (Saudável)</span><span>94%</span></div>
-        <div class="pbar"><div class="pbar-fill" style="width:94%;background:var(--success)"></div></div>
+        <div class="pbar-label"><span>Precisão — Classe Positiva (Câncer)</span><span>31%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:31%;background:var(--warning)"></div></div>
       </div>
       <div class="pbar-row">
-        <div class="pbar-label"><span>Precisão — Classe Positiva (Câncer)</span><span>50%</span></div>
-        <div class="pbar"><div class="pbar-fill" style="width:50%;background:var(--warning)"></div></div>
+        <div class="pbar-label"><span>Recall — Classe Positiva (Câncer) ⚠️ crítico</span><span>36%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:36%;background:var(--warning)"></div></div>
       </div>
       <div class="pbar-row">
-        <div class="pbar-label"><span>Recall — Classe Positiva (Câncer) ⚠️ crítico</span><span>9%</span></div>
-        <div class="pbar"><div class="pbar-fill" style="width:9%;background:var(--danger)"></div></div>
-      </div>
-      <div class="pbar-row">
-        <div class="pbar-label"><span>F1-Score — Classe Positiva</span><span>15%</span></div>
-        <div class="pbar"><div class="pbar-fill" style="width:15%;background:var(--danger)"></div></div>
+        <div class="pbar-label"><span>AUROC</span><span>73,7%</span></div>
+        <div class="pbar"><div class="pbar-fill" style="width:73.7%;background:var(--info)"></div></div>
       </div>
     </div>
   </div>
@@ -686,43 +752,52 @@
       </div>
     </div>
 
-    <h3 style="margin-bottom:12px;">5.3 — Modelo e Justificativa</h3>
+    <h3 style="margin-bottom:12px;">5.3 — Comparativo de Modelos e Decisão</h3>
     <div class="tbl-wrap" style="margin-bottom:20px;">
       <table>
-        <thead><tr><th>Aspecto</th><th>Decisão</th><th>Justificativa</th></tr></thead>
+        <thead><tr><th>Modelo</th><th>Precisão (câncer)</th><th>Recall (câncer)</th><th>F1 (câncer)</th><th>Acurácia</th><th>AUROC</th><th>Veredicto</th></tr></thead>
         <tbody>
-          <tr><td>Algoritmo</td><td>Random Forest</td><td>Robusto a outliers, dados mistos, relações não lineares e overfitting</td></tr>
-          <tr><td>Desbalanceamento</td><td>class_weight={0:1, 1:14}</td><td>Reflete a proporção real ~1:14 sem oversampling</td></tr>
-          <tr><td>Avaliação</td><td>Classification Report (Precisão, Recall, F1)</td><td>Acurácia é enganosa com classes desbalanceadas</td></tr>
-          <tr><td>Pipeline</td><td>sklearn Pipeline completo</td><td>Evita data leakage e garante reprodutibilidade</td></tr>
+          <tr><td>RF Baseline</td><td>50%</td><td>9%</td><td>0.15</td><td>94%</td><td>—</td><td>⚠️ Recall insuficiente</td></tr>
+          <tr style="background:var(--success-light)"><td><strong>RF + SMOTE + Threshold 0.41</strong></td><td><strong>31%</strong></td><td><strong>36%</strong></td><td><strong>0.33</strong></td><td><strong>91%</strong></td><td><strong>0.737</strong></td><td>✅ Melhor resultado</td></tr>
+          <tr><td>Árvore de Decisão + SMOTE</td><td>22%</td><td>36%</td><td>0.28</td><td>88%</td><td>0.624</td><td>❌ AUROC fraco</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h3 style="margin-bottom:12px;">5.4 — Limitações e Próximos Passos</h3>
+    <h3 style="margin-bottom:12px;">5.4 — Limitações e Conclusão Final</h3>
     <div class="callout warn" style="margin-bottom:16px;">
       <div class="callout-icon">🚧</div>
       <div class="callout-body">
         <strong>Limitações Identificadas</strong>
         <ul style="margin-top:8px;padding-left:18px;">
-          <li>Dataset pequeno: 858 registros com apenas 55 positivos limita o aprendizado da classe minoritária;</li>
-          <li>Recall de 9% é inadequado para triagem médica — onde falsos negativos têm consequências graves;</li>
+          <li>Dataset pequeno: 858 registros com apenas 55 positivos limita estruturalmente o aprendizado;</li>
+          <li>SMOTE não é bem visto pela comunidade médica — gera amostras sintéticas, não dados reais;</li>
+          <li>Recall de 36% ainda é inadequado para triagem clínica real (falsos negativos = vidas em risco);</li>
           <li>Alta taxa de dados faltantes (>91%) nas variáveis temporais de DST reduz seu poder preditivo;</li>
-          <li>Dataset de 2003: padrões clínicos podem ter mudado com o tempo.</li>
+          <li>O pré-processamento melhorou a importância relativa das features, mas não o poder discriminatório do dataset.</li>
         </ul>
+      </div>
+    </div>
+    <div class="callout bad" style="margin-bottom:16px;">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Conclusão: Dataset sem poder preditivo suficiente para uso clínico</strong>
+        Mesmo com técnicas avançadas (SMOTE, ajuste de threshold, GridSearchCV, feature engineering),
+        o melhor AUROC obtido foi 0.737 e o melhor Recall foi 36%. O dataset não possui poder preditivo
+        suficiente para ser utilizado como ferramenta de triagem médica real. Os resultados são
+        academicamente válidos e demonstram domínio das técnicas, mas não devem ser usados em produção clínica.
       </div>
     </div>
     <div class="callout ok">
       <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <strong>O que melhoraria os resultados?</strong>
+        <strong>O que melhoraria os resultados em um cenário real?</strong>
         <ul style="margin-top:8px;padding-left:18px;">
-          <li><strong>SMOTE</strong> ou outros métodos de oversampling para balancear as classes no treino;</li>
-          <li><strong>Ajuste de threshold</strong>: usar probabilidade >0,30 em vez de >0,50 para aumentar o Recall;</li>
-          <li><strong>Otimização de hiperparâmetros</strong>: GridSearchCV ou Optuna para n_estimators, max_depth, min_samples_leaf;</li>
-          <li><strong>Avaliação por AUC-ROC</strong> e Curva Precisão-Recall em vez de acurácia;</li>
-          <li><strong>Mais dados</strong>: coletar mais casos positivos ou usar datasets externos complementares;</li>
-          <li><strong>Outros algoritmos</strong>: XGBoost, LightGBM ou redes neurais para capturar relações mais complexas.</li>
+          <li><strong>Mais dados reais</strong>: coletar mais casos positivos confirmados (>500 casos positivos);</li>
+          <li><strong>XGBoost / LightGBM</strong>: modelos de boosting tendem a superar RF em datasets pequenos e desbalanceados;</li>
+          <li><strong>Curva Precisão-Recall</strong>: mais informativa que AUC-ROC para classes muito desbalanceadas;</li>
+          <li><strong>Validação cruzada estratificada</strong>: K-Fold com K=10 para estimativas mais confiáveis com poucos dados;</li>
+          <li><strong>Dados externos complementares</strong>: integrar datasets de outros hospitais para aumentar o volume de casos positivos.</li>
         </ul>
       </div>
     </div>
@@ -734,7 +809,7 @@
   <strong>Predição de Risco — Câncer do Colo do Útero</strong><br>
   FIAP — Pós-Graduação IA Para Desenvolvedores | Tech Challenge Fase 1<br>
   Dataset: UCI Machine Learning Repository — Hospital Universitário de Caracas, Venezuela<br>
-  Python · Pandas · Scikit-learn · Matplotlib · Seaborn
+  Python · Pandas · Scikit-learn · imbalanced-learn · Streamlit · Matplotlib · Seaborn
   <div class="footer-team">
     Jefferson Antônio Pantoja Silva &nbsp;·&nbsp; Wilson Lima da Silva &nbsp;·&nbsp;
     Gustavo Lopes da Silva &nbsp;·&nbsp; Felipe Soeiro Lopes &nbsp;·&nbsp; Vinicius Tavares Sousa da Silva
@@ -859,13 +934,32 @@ new Chart(document.getElementById('chartMissingGroups'), {
   }
 });
 
+new Chart(document.getElementById('chartComparativo'), {
+  type: 'bar',
+  data: {
+    labels: ['RF Baseline', 'RF + SMOTE + Threshold 0.41', 'Árvore de Decisão + SMOTE'],
+    datasets: [
+      { label: 'Precisão (câncer)', data: [0.50, 0.31, 0.22], backgroundColor: p.azul,     borderRadius: 6 },
+      { label: 'Recall (câncer)',   data: [0.09, 0.36, 0.36], backgroundColor: p.vermelho,  borderRadius: 6 },
+      { label: 'F1 (câncer)',       data: [0.15, 0.33, 0.28], backgroundColor: p.roxo,      borderRadius: 6 }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: { y: { min: 0, max: 0.6, ticks: { callback: v => (v*100).toFixed(0) + '%' } } },
+    plugins: { legend: { position: 'top' } }
+  }
+});
+
 new Chart(document.getElementById('chartBaseline'), {
   type: 'bar',
   data: {
     labels: ['Precisão','Recall','F1-Score'],
     datasets: [
-      { label: 'Classe 0 — Saudável',  data: [0.94, 0.99, 0.97], backgroundColor: p.verde,    borderRadius: 6 },
-      { label: 'Classe 1 — Biopsia +', data: [0.50, 0.09, 0.15], backgroundColor: p.vermelho, borderRadius: 6 }
+      { label: 'RF Baseline — Cl. Saudável',      data: [0.94, 0.99, 0.97], backgroundColor: p.verde,    borderRadius: 6 },
+      { label: 'RF Baseline — Biopsia +',          data: [0.50, 0.09, 0.15], backgroundColor: p.vermelho, borderRadius: 6 },
+      { label: 'RF+SMOTE+0.41 — Cl. Saudável',    data: [0.95, 0.94, 0.96], backgroundColor: '#34d399',  borderRadius: 6 },
+      { label: 'RF+SMOTE+0.41 — Biopsia +',       data: [0.31, 0.36, 0.33], backgroundColor: p.laranja,  borderRadius: 6 }
     ]
   },
   options: {
@@ -875,23 +969,24 @@ new Chart(document.getElementById('chartBaseline'), {
   }
 });
 
-new Chart(document.getElementById('chartRadar'), {
-  type: 'radar',
+new Chart(document.getElementById('chartAuroc'), {
+  type: 'bar',
   data: {
-    labels: ['Precisão\nCl. Saudável','Recall\nCl. Saudável','F1\nCl. Saudável','Acurácia\nGeral','Precisão\nCl. Câncer','Recall\nCl. Câncer','F1\nCl. Câncer'],
+    labels: ['RF Baseline', 'RF + SMOTE + Threshold 0.41', 'Árvore de Decisão + SMOTE'],
     datasets: [{
-      label: 'Random Forest',
-      data: [0.94, 0.99, 0.97, 0.94, 0.50, 0.09, 0.15],
-      borderColor: p.roxo,
-      backgroundColor: p.roxo + '33',
-      pointBackgroundColor: p.roxo,
-      pointRadius: 5
+      label: 'AUROC',
+      data: [null, 0.737, 0.624],
+      backgroundColor: [p.cinza, p.verde, p.vermelho],
+      borderRadius: 8
     }]
   },
   options: {
     responsive: true,
-    scales: { r: { min: 0, max: 1, ticks: { stepSize: 0.25, callback: v => (v*100) + '%' } } },
-    plugins: { legend: { position: 'top' } }
+    scales: { y: { min: 0, max: 1, ticks: { callback: v => v.toFixed(2) } } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.raw ? ' AUROC: ' + ctx.raw.toFixed(3) : ' Não avaliado' } }
+    }
   }
 });
 </script>
