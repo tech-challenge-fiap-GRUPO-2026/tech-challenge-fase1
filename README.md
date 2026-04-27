@@ -97,19 +97,76 @@ O notebook implementa um pipeline sklearn com as seguintes etapas:
 
 ## 🤖 Modelos Avaliados
 
-Foram testados três cenários progressivos de modelagem:
+Foram testados três cenários progressivos de modelagem, todos usando divisão **80% treino / 20% teste** com `stratify=y` e `random_state=42` para garantir reprodutibilidade.
 
-### 1. Random Forest — Baseline (sem oversampling)
-- **Algoritmo:** RandomForestClassifier · `class_weight={0: 1, 1: 14}`
-- **Divisão:** 80% treino / 20% teste · `stratify=y` · `random_state=42`
+---
 
-### 2. Random Forest — Com SMOTE + Ajuste de Threshold ⭐ melhor resultado
-- **Pipeline:** mesmo pré-processamento + SMOTE (oversampling da classe minoritária)
-- **Threshold ajustado:** 0.41 (em vez do padrão 0.50)
+### Modelo 1 — Random Forest Baseline
 
-### 3. Árvore de Decisão — Com SMOTE
-- **Algoritmo:** DecisionTreeClassifier · `class_weight={0: 1, 1: 14}`
-- **GridSearchCV** para otimização de hiperparâmetros
+Treinado com tratamento mínimo de nulos (apenas imputação pela média), sem o pipeline completo de pré-processamento.
+
+```python
+RandomForestClassifier(
+    class_weight={0: 1, 1: 10},   # penaliza 10× mais erros na classe positiva (câncer)
+    n_estimators=200,              # número de árvores na floresta
+    min_samples_leaf=1,
+    random_state=42
+)
+```
+
+**Busca de hiperparâmetros (GridSearchCV):**
+
+```python
+param_grid = {
+    'model__n_estimators':   [200, 400],
+    'model__max_depth':      [None, 10],
+    'model__min_samples_leaf': [1, 2, 4],
+    'model__class_weight':   [{0:1, 1:10}, {0:1, 1:20}]
+}
+GridSearchCV(pipeline, param_grid, cv=5, scoring='f1', n_jobs=-1)
+```
+
+---
+
+### Modelo 2 — Random Forest + SMOTE + Threshold ajustado ⭐ melhor resultado
+
+Mesmo pipeline de pré-processamento completo, acrescido de SMOTE para balancear as classes antes do treino. O limiar de decisão foi ajustado manualmente para maximizar o Recall.
+
+```python
+# Oversampling da classe minoritária
+SMOTE(random_state=42)
+
+# Classificador
+RandomForestClassifier(
+    class_weight={0: 1, 1: 10},   # SMOTE + class_weight combinados melhoram o F1
+    n_estimators=200,
+    min_samples_leaf=1,
+    random_state=42
+)
+
+# Ajuste do threshold (padrão = 0.50)
+threshold = 0.41
+y_pred = (y_proba > threshold).astype(int)
+```
+
+> O SMOTE sozinho piorou o F1. A combinação SMOTE + `class_weight` foi o que trouxe ganho real.
+
+---
+
+### Modelo 3 — Árvore de Decisão (sem SMOTE)
+
+Pipeline completo de pré-processamento, porém **sem SMOTE** — experimentos mostraram que a Árvore de Decisão funciona melhor somente com o `class_weight` penalizado, sem oversampling sintético.
+
+```python
+DecisionTreeClassifier(
+    class_weight={0: 1, 1: 10},   # penaliza erros na classe positiva
+    max_depth=4,                   # limita profundidade para evitar overfitting
+    min_samples_leaf=5,            # folhas com pelo menos 5 amostras
+    random_state=42
+)
+```
+
+> Threshold padrão de 0.50 mantido — ajustes não trouxeram ganho neste modelo.
 
 ---
 
@@ -119,9 +176,11 @@ Foram testados três cenários progressivos de modelagem:
 |--------|:-----------------:|:---------------:|:-----------:|:--------:|:-----:|
 | RF Baseline | 50% | 9% | 0.15 | 94% | — |
 | **RF + SMOTE + Threshold 0.41** | **31%** | **36%** | **0.33** | **91%** | **0.737** |
-| Árvore de Decisão + SMOTE | 22% | 36% | 0.28 | 88% | 0.624 |
+| Árvore de Decisão (sem SMOTE) | 22% | 36% | 0.28 | 88% | 0.624 |
 
-> 💡 **Conclusão:** O melhor resultado foi obtido com **Random Forest + SMOTE + threshold ajustado (0.41)**, que elevou o Recall de 9% para 36%. O dataset possui baixo poder preditivo intrínseco — o pré-processamento melhorou a importância das features, mas não a capacidade discriminatória do modelo. O uso de SMOTE, embora eficaz tecnicamente, não é bem-visto pela comunidade médica. A Árvore de Decisão apresentou AUROC inferior (0.62), confirmando o Random Forest como algoritmo mais adequado para este problema.
+> **Recall** é a métrica mais importante neste contexto clínico: representa a capacidade do modelo de identificar corretamente os casos de câncer (minimizar falsos negativos).
+
+**Conclusão:** O melhor resultado foi obtido com **Random Forest + SMOTE + threshold 0.41**, elevando o Recall de 9% para 36%. O pré-processamento melhorou a importância das features, mas o dataset possui baixo poder preditivo intrínseco — é pequeno (858 pacientes) e altamente desbalanceado (6% positivos). O uso de SMOTE, embora eficaz tecnicamente, não é bem-visto pela comunidade médica. A Árvore de Decisão, mesmo com AUROC inferior (0.624), pode ser preferível em contextos que exigem interpretabilidade ou que rejeitem oversampling sintético.
 
 ---
 
