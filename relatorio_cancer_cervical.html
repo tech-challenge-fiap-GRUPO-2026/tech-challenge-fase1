@@ -288,7 +288,7 @@
         <div class="hero-stat-lbl">Pacientes no dataset</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-val">6,4%</div>
+        <div class="hero-stat-val">6%</div>
         <div class="hero-stat-lbl">Biópsia positiva</div>
       </div>
       <div class="hero-stat">
@@ -375,7 +375,7 @@
       </div>
       <div class="card warning">
         <div class="card-label">Biópsia Positiva</div>
-        <div class="card-value">6,4%</div>
+        <div class="card-value">6%</div>
         <div class="card-sub">55 casos positivos de 858</div>
       </div>
       <div class="card info">
@@ -435,7 +435,7 @@
           <tr>
             <td><strong>Biopsia ⭐</strong></td>
             <td>Retirada de fragmento de tecido para análise histológica — padrão ouro</td>
-            <td><span class="badge red">6,4%</span></td>
+            <td><span class="badge red">6%</span></td>
             <td><strong>Target principal</strong> — mais representativa clinicamente</td>
           </tr>
         </tbody>
@@ -507,7 +507,7 @@
           <tr><td>DIU (0/1)</td><td>741 (86%)</td><td>11,2%</td><td>—</td><td>0</td><td>1</td></tr>
           <tr><td>DST (0/1)</td><td>753 (88%)</td><td>10,5%</td><td>—</td><td>0</td><td>1</td></tr>
           <tr><td>DST — Tempo desde 1º diagnóst.</td><td>71 (8%)</td><td>6,1</td><td>5,9</td><td>1</td><td>22</td></tr>
-          <tr><td><strong>Biopsia (target)</strong></td><td>858 (100%)</td><td>6,4%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td><strong>Biopsia (target)</strong></td><td>858 (100%)</td><td>6%</td><td>—</td><td>0</td><td>1</td></tr>
         </tbody>
       </table>
     </div>
@@ -527,10 +527,7 @@
       <div class="callout-icon">🔍</div>
       <div class="callout-body">
         <strong>Correlações Fracas — Problema Não Linear</strong>
-        A matriz de correlação mostrou que nenhum atributo isolado tem correlação forte com a Biópsia.
-        Os maiores coeficientes positivos foram: <em>STDs:genital herpes</em> (0,13),
-        <em>STDs:HIV</em> (0,12) e <em>STDs_respondido</em> (0,11).
-        Isso confirma a natureza não linear do problema e justifica o uso de Random Forest e Árvore de Decisão.
+        A matriz de correlação mostrou que nenhum atributo isolado tem correlação forte com a Biópsia confirmando a natureza não linear do problema e justifica o uso de Random Forest e Árvore de Decisão.
       </div>
     </div>
 
@@ -556,7 +553,7 @@
       <div class="callout-icon">⚙️</div>
       <div class="callout-body">
         <strong>Pipeline sklearn encapsulado</strong>
-        Todo o pré-processamento foi encapsulado em um <code>imblearn.pipeline.Pipeline</code>,
+        Todo o pré-processamento foi encapsulado em um <code>Pipeline</code>,
         garantindo que as mesmas transformações sejam aplicadas no treino e no teste,
         sem vazamento de dados (<em>data leakage</em>).
       </div>
@@ -632,7 +629,6 @@
         <strong>Resultado do Pré-processamento</strong>
         O dataset passou de 29 colunas para ~42 features enriquecidas, sem nenhum valor nulo.
         O pré-processamento melhorou a importância relativa das features engineered no modelo,
-        mas o ganho de correlação linear com a Biópsia foi marginal (+0,01 máximo),
         confirmando que o modelo precisa capturar relações não lineares.
       </div>
     </div>
@@ -973,7 +969,7 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
       <div class="callout-body">
         Dataset com pacientes jovens (média 26,8 anos), baixa prevalência de DSTs (10,5%) e tabagismo (14,6%).
         Mais da metade usa contraceptivos hormonais (64,1%). O desbalanceamento extremo das classes
-        (6,4% positivos) foi o principal desafio. Nenhum atributo isolado apresentou correlação forte
+        (6% positivos) foi o principal desafio. Nenhum atributo isolado apresentou correlação forte
         com a Biópsia — confirmando a natureza não linear do problema.
       </div>
     </div>
@@ -1088,9 +1084,9 @@ new Chart(document.getElementById('chartTargets'), {
   data: {
     labels: ['Hinselmann','Schiller','Citologia','Biopsia (target principal)'],
     datasets: [
-      { label: 'Positivos (%)', data: [4.1, 8.6, 5.1, 6.4],
+      { label: 'Positivos (%)', data: [4.1, 8.6, 5.1, 6],
         backgroundColor: [p.azul, p.laranja, p.roxo, p.rosa], borderRadius: 8 },
-      { label: 'Negativos (%)', data: [95.9, 91.4, 94.9, 93.6],
+      { label: 'Negativos (%)', data: [95.9, 91.4, 94.9, 94],
         backgroundColor: ['#dbeafe','#fef3c7','#ede9fe','#fce7f3'], borderRadius: 8 }
     ]
   },
@@ -1153,7 +1149,7 @@ new Chart(document.getElementById('chartMissing'), {
 new Chart(document.getElementById('chartBiopsia'), {
   type: 'doughnut',
   data: {
-    labels: ['Saudável (93,6%)', 'Câncer (6,4%)'],
+    labels: ['Saudável (94%)', 'Câncer (6%)'],
     datasets: [{ data: [803, 55],
       backgroundColor: [p.verde, p.vermelho],
       borderColor: '#fff', borderWidth: 3 }]
