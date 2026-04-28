@@ -107,7 +107,7 @@ Treinado com tratamento mínimo de nulos (apenas imputação pela média), sem o
 
 ```python
 RandomForestClassifier(
-    class_weight={0: 1, 1: 10},   # penaliza 10× mais erros na classe positiva (câncer)
+    class_weight={0: 1, 1: 10},    # penaliza 10× mais erros na classe positiva (câncer)
     n_estimators=200,              # número de árvores na floresta
     min_samples_leaf=1,
     random_state=42
@@ -159,7 +159,7 @@ Pipeline completo de pré-processamento, porém **sem SMOTE** — experimentos m
 
 ```python
 DecisionTreeClassifier(
-    class_weight={0: 1, 1: 10},   # penaliza erros na classe positiva
+    class_weight={0: 1, 1: 10},    # penaliza erros na classe positiva
     max_depth=4,                   # limita profundidade para evitar overfitting
     min_samples_leaf=5,            # folhas com pelo menos 5 amostras
     random_state=42
@@ -193,7 +193,6 @@ tech-challenge-fase1/
 ├── notebooks/
 │   └── init_cervical_cancer.ipynb         # Notebook principal com análise e modelos
 ├── reports/
-│   ├── relatorio_cancer_cervical.html     # Relatório visual interativo com gráficos
 │   ├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
 │   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
 ├── app/
@@ -210,6 +209,7 @@ tech-challenge-fase1/
 ├── run_app.sh                             # Script de execução (Linux/Mac)
 ├── run_app.cmd                            # Script de execução (Windows)
 └── README.md                              # Este arquivo
+└── relatorio_cancer_cervical.html         # Relatório visual interativo com gráficos
 ```
 
 ---
@@ -285,14 +285,14 @@ Acesse em: `http://localhost:8501`
 
 ### 7. 🌐 Visualizar o relatório HTML
 
-Abra o arquivo `reports/relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
+Abra o arquivo `relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
 
 ### 8. 📄 Relatório técnico (ABNT)
 
 O relatório técnico já está disponível no repositório em dois formatos:
 
-- `reports/relatorio_tecnico_abnt.pdf` — abra diretamente em qualquer leitor de PDF.
-- `reports/relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
+- `docs/relatorio_tecnico_abnt.pdf`  — abra diretamente em qualquer leitor de PDF.
+- `docs/relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
 
 ---
 
