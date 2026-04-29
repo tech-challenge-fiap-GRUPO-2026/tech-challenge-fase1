@@ -3,9 +3,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
-from sklearn.pipeline import Pipeline
+from imblearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.tree import DecisionTreeClassifier
+from imblearn.over_sampling import SMOTE
 # from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 from app.src.pipeline_functions import (
@@ -29,7 +30,7 @@ class ModelTestTraining(object):
         dataset,
         target_column,
         random_state,
-        test_size
+        test_size,
     ):
         self.ui_helper = StreamlitHelper()
         self.dataset = dataset
@@ -37,8 +38,8 @@ class ModelTestTraining(object):
         self.random_state = random_state
         self.test_size = test_size
         self.pipeline = self.__build_pipeline()
-        self.X = dataset
-        self.y = dataset[target_column]
+        self.X = dataset.copy().drop(columns=[target_column])
+        self.y = dataset.copy()[target_column]
 
     def __build_pipeline(self):
         pipeline = Pipeline([
@@ -50,9 +51,8 @@ class ModelTestTraining(object):
             ('contraceptivos', FunctionTransformer(transformar_contraceptivos)),
             ('remover_std_tempo', FunctionTransformer(remover_coluna_std_tempo)),
             ('novos_atributos', FunctionTransformer(criar_atributos_estrategicos)),
-            # ('smote', SMOTE(random_state=42)), # Funciona melhor sem SMOTE
             ('model', DecisionTreeClassifier(
-                class_weight={0:1, 1:10}, # Funciona melhor penalizando os erros (sem SMOTE)
+                class_weight={0: 1, 1: 10},
                 max_depth=4,
                 min_samples_leaf=5,
                 random_state=self.random_state
@@ -68,7 +68,7 @@ class ModelTestTraining(object):
             self.X,
             self.y,
             test_size=self.test_size,
-            stratify=self.y,
+            stratify=self.y, 
             random_state=self.random_state
         )
 
