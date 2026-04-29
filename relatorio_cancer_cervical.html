@@ -7,327 +7,371 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --primary:       #6d28d9;
-      --primary-light: #ede9fe;
-      --accent:        #db2777;
-      --accent-light:  #fce7f3;
-      --success:       #059669;
-      --success-light: #d1fae5;
-      --warning:       #d97706;
-      --warning-light: #fef3c7;
-      --danger:        #dc2626;
-      --danger-light:  #fee2e2;
-      --info:          #0284c7;
-      --info-light:    #e0f2fe;
-      --text:          #1e293b;
-      --muted:         #64748b;
-      --border:        #e2e8f0;
-      --bg:            #f1f5f9;
-      --card:          #ffffff;
+      --purple: #5b21b6;
+      --purple-lt: #ede9fe;
+      --pink:   #be185d;
+      --green:  #047857;
+      --green-lt: #d1fae5;
+      --amber:  #92400e;
+      --amber-lt: #fef3c7;
+      --red:    #991b1b;
+      --red-lt: #fee2e2;
+      --blue:   #1e40af;
+      --blue-lt: #dbeafe;
+      --text:   #111827;
+      --muted:  #6b7280;
+      --border: #e5e7eb;
+      --bg:     #f9fafb;
+      --card:   #ffffff;
+      --r:      10px;
     }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.7;
+      font-size: 15px;
+      line-height: 1.75;
     }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
+
+    /* ── Scroll progress ── */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--pink));
+      transform-origin: left; transform: scaleX(0);
+      z-index: 9999; transition: transform 0.08s linear;
+    }
+
+    /* ── Back to top ── */
+    #back-to-top {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--purple); color: #fff;
+      border: none; border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: 0 2px 10px rgba(91,33,182,.3);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s, transform 0.2s;
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #back-to-top.visible { opacity: 1; pointer-events: auto; }
+    #back-to-top:hover   { transform: translateY(-3px); }
 
     /* ── Hero ── */
     .hero {
-      background: linear-gradient(135deg, #3b0764 0%, #6d28d9 45%, #db2777 100%);
+      background: linear-gradient(135deg, #1e1b4b 0%, #5b21b6 55%, #be185d 100%);
       color: #fff;
-      padding: 64px 40px 56px;
+      padding: 72px 40px 64px;
       text-align: center;
-      position: relative;
-      overflow: hidden;
     }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-    .hero-content { position: relative; }
     .hero-eyebrow {
       display: inline-block;
-      background: rgba(255,255,255,.15);
-      border: 1px solid rgba(255,255,255,.25);
-      border-radius: 999px;
-      padding: 4px 18px;
-      font-size: .82rem;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .hero h1 { font-size: 2.8rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 14px; line-height: 1.1; }
-    .hero p  { font-size: 1.05rem; opacity: .85; max-width: 680px; margin: 0 auto 28px; }
-    .hero-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
-    .hero-pills span {
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.22);
-      padding: 6px 16px; border-radius: 999px;
-      font-size: .82rem; font-weight: 600;
-    }
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      max-width: 760px;
-      margin: 0 auto 36px;
-    }
-    .hero-stat {
       background: rgba(255,255,255,.12);
       border: 1px solid rgba(255,255,255,.2);
-      border-radius: 12px;
-      padding: 14px 16px;
+      border-radius: 999px;
+      padding: 4px 16px;
+      font-size: .75rem; font-weight: 600;
+      letter-spacing: .09em; text-transform: uppercase;
+      margin-bottom: 22px;
     }
-    .hero-stat-val { font-size: 1.8rem; font-weight: 900; line-height: 1; }
-    .hero-stat-lbl { font-size: .75rem; opacity: .75; margin-top: 3px; }
+    .hero h1 {
+      font-size: 2.5rem; font-weight: 800;
+      letter-spacing: -.5px; line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .hero-sub {
+      font-size: .97rem; opacity: .75;
+      max-width: 580px; margin: 0 auto 36px;
+    }
+    .hero-stats {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 10px; max-width: 680px; margin: 0 auto 32px;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px; padding: 14px 22px;
+      min-width: 130px;
+    }
+    .hero-stat-val { font-size: 1.85rem; font-weight: 800; line-height: 1; }
+    .hero-stat-lbl { font-size: .7rem; opacity: .65; margin-top: 4px; letter-spacing: .03em; }
+    .hero-pills {
+      display: flex; justify-content: center; gap: 8px;
+      flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .hero-pills span {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.16);
+      padding: 3px 13px; border-radius: 999px;
+      font-size: .76rem;
+    }
     .team-box {
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 14px;
-      padding: 20px 28px;
-      margin: 0 auto;
-      max-width: 840px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 12px; padding: 18px 24px;
+      margin: 0 auto; max-width: 780px;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px 24px;
-      text-align: left;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 8px 20px; text-align: left;
     }
     .team-title {
       grid-column: 1/-1;
-      font-size: .72rem; font-weight: 800;
+      font-size: .68rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: .12em;
-      opacity: .65; margin-bottom: 4px;
+      opacity: .5; margin-bottom: 4px;
     }
-    .team-member { font-size: .86rem; opacity: .9; }
-    .team-member strong { display: block; font-size: .9rem; }
+    .team-member { font-size: .82rem; opacity: .82; }
+    .team-member strong { display: block; font-size: .84rem; }
 
     /* ── Layout ── */
-    .container { max-width: 1100px; margin: 0 auto; padding: 44px 24px; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 52px 24px; }
 
     /* ── TOC ── */
     .toc {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 28px 32px; margin-bottom: 52px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      border-radius: var(--r); padding: 22px 26px; margin-bottom: 52px;
     }
-    .toc h2 { font-size: 1rem; color: var(--primary); margin-bottom: 14px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-    .toc ol { padding-left: 20px; }
-    .toc li { margin-bottom: 7px; }
-    .toc a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .toc h2 {
+      font-size: .7rem; font-weight: 700; color: var(--purple);
+      text-transform: uppercase; letter-spacing: .09em; margin-bottom: 12px;
+    }
+    .toc ol { padding-left: 18px; }
+    .toc li { margin-bottom: 5px; font-size: .9rem; }
+    .toc a  { color: var(--purple); text-decoration: none; }
     .toc a:hover { text-decoration: underline; }
 
     /* ── Sections ── */
-    .section { margin-bottom: 64px; }
+    .section { margin-bottom: 72px; }
     .section-header {
-      display: flex; align-items: center; gap: 14px;
-      margin-bottom: 30px; padding-bottom: 18px;
-      border-bottom: 3px solid var(--primary-light);
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px; padding-bottom: 14px;
+      border-bottom: 2px solid #ede9fe;
     }
     .section-num {
-      background: var(--primary); color: #fff;
-      width: 38px; height: 38px; border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 7px;
+      background: var(--purple); color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 1rem; flex-shrink: 0;
+      font-weight: 700; font-size: .85rem; flex-shrink: 0;
     }
-    .section-header h2 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+    .section-header h2 { font-size: 1.3rem; font-weight: 700; }
+
+    /* ── Intro text ── */
+    .section-intro {
+      color: var(--muted); margin-bottom: 24px; font-size: .93rem; max-width: 720px;
+    }
 
     /* ── Cards ── */
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin-bottom: 28px; }
     .card {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 20px 22px;
-      border-left: 5px solid var(--primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+      border-radius: var(--r); padding: 16px 18px;
+      border-top: 3px solid var(--purple);
     }
-    .card.accent  { border-left-color: var(--accent); }
-    .card.success { border-left-color: var(--success); }
-    .card.warning { border-left-color: var(--warning); }
-    .card.info    { border-left-color: var(--info); }
-    .card.danger  { border-left-color: var(--danger); }
-    .card-label { font-size: .74rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 6px; }
-    .card-value { font-size: 2rem; font-weight: 900; color: var(--text); line-height: 1; }
-    .card-sub   { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+    .card.accent  { border-top-color: var(--pink); }
+    .card.success { border-top-color: var(--green); }
+    .card.warning { border-top-color: #d97706; }
+    .card.info    { border-top-color: #2563eb; }
+    .card.danger  { border-top-color: #dc2626; }
+    .card-label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 6px; }
+    .card-value { font-size: 1.65rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .card-sub   { font-size: .76rem; color: var(--muted); margin-top: 4px; }
 
     /* ── Charts ── */
     .chart-wrap {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 28px 24px; margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+      border-radius: var(--r); padding: 22px 22px 18px;
+      margin-bottom: 18px;
     }
-    .chart-wrap h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
-    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media(max-width:700px){ .chart-row { grid-template-columns: 1fr; } }
+    .chart-wrap h3 {
+      font-size: .75rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .07em; margin-bottom: 16px;
+    }
+    .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media(max-width:660px){ .chart-row { grid-template-columns: 1fr; } }
 
     /* ── Table ── */
-    .tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
-    table { width: 100%; border-collapse: collapse; font-size: .88rem; background: var(--card); }
-    thead tr { background: var(--primary); color: #fff; }
-    thead th { padding: 13px 16px; text-align: left; font-weight: 700; font-size: .84rem; letter-spacing: .03em; }
-    tbody tr:nth-child(even) { background: #f8f7ff; }
-    tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .tbl-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--border); margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; background: var(--card); }
+    thead tr { background: var(--purple); color: #fff; }
+    thead th { padding: 11px 14px; text-align: left; font-weight: 600; font-size: .8rem; }
+    tbody tr:nth-child(even) { background: #faf9ff; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
 
     /* ── Callout ── */
     .callout {
-      border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;
-      display: flex; gap: 14px; align-items: flex-start;
-      border: 1px solid;
+      border-radius: 8px; padding: 13px 16px; margin-bottom: 16px;
+      display: flex; gap: 11px; align-items: flex-start;
+      font-size: .88rem; border: 1px solid;
     }
-    .callout.info  { background: var(--info-light);    border-color: #7dd3fc; }
-    .callout.warn  { background: var(--warning-light); border-color: #fcd34d; }
-    .callout.ok    { background: var(--success-light); border-color: #6ee7b7; }
-    .callout.bad   { background: var(--danger-light);  border-color: #fca5a5; }
-    .callout-icon  { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
-    .callout-body  { font-size: .92rem; }
-    .callout-body strong { display: block; font-size: .97rem; margin-bottom: 4px; }
+    .callout.info { background: #eff6ff; border-color: #bfdbfe; }
+    .callout.warn { background: #fffbeb; border-color: #fde68a; }
+    .callout.ok   { background: #f0fdf4; border-color: #bbf7d0; }
+    .callout.bad  { background: #fef2f2; border-color: #fecaca; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; line-height: 1.5; }
+    .callout-body strong { font-weight: 600; display: block; margin-bottom: 2px; }
 
     /* ── Badges ── */
-    .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: .76rem; font-weight: 700; }
-    .badge.green  { background: var(--success-light); color: var(--success); }
-    .badge.yellow { background: var(--warning-light); color: #92400e; }
-    .badge.red    { background: var(--danger-light);  color: var(--danger);  }
-    .badge.purple { background: var(--primary-light); color: var(--primary); }
-    .badge.blue   { background: var(--info-light);    color: var(--info);    }
-    .badge.gray   { background: #f1f5f9;              color: var(--muted);   }
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .71rem; font-weight: 600; }
+    .badge.green  { background: #d1fae5; color: #064e3b; }
+    .badge.yellow { background: #fef3c7; color: #78350f; }
+    .badge.red    { background: #fee2e2; color: #7f1d1d; }
+    .badge.purple { background: #ede9fe; color: #3b0764; }
+    .badge.blue   { background: #dbeafe; color: #1e3a8a; }
+    .badge.gray   { background: #f3f4f6; color: #374151; }
 
     /* ── Code ── */
     pre {
-      background: #0f172a; color: #e2e8f0;
-      border-radius: 10px; padding: 20px 22px;
-      overflow-x: auto; font-size: .82rem; line-height: 1.7;
-      margin-bottom: 20px; border: 1px solid #1e293b;
+      background: #1e1b4b; color: #e0e7ff;
+      border-radius: 8px; padding: 18px 20px;
+      overflow-x: auto; font-size: .79rem; line-height: 1.65;
+      margin-bottom: 18px;
     }
-    code { font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace; }
+    code { font-family: 'Cascadia Code','Fira Code','Consolas',monospace; }
     pre code { font-size: inherit; }
-    .kw  { color: #93c5fd; }  /* keywords */
-    .cm  { color: #64748b; }  /* comments */
-    .st  { color: #86efac; }  /* strings */
-    .nm  { color: #fcd34d; }  /* numbers */
-    .fn  { color: #c4b5fd; }  /* functions */
-    .cl  { color: #f9a8d4; }  /* class names */
+    .kw { color: #a5b4fc; } .cm { color: #6366f1; opacity: .8; }
+    .st { color: #86efac; } .nm { color: #fde68a; }
+    .fn { color: #c084fc; } .cl { color: #f9a8d4; }
 
     /* ── Steps ── */
     .steps { counter-reset: step; list-style: none; padding: 0; }
     .steps li {
       counter-increment: step;
-      display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start;
+      display: flex; gap: 11px; margin-bottom: 12px;
+      align-items: flex-start; font-size: .9rem;
     }
     .steps li::before {
       content: counter(step);
-      background: var(--primary); color: #fff;
-      min-width: 28px; height: 28px; border-radius: 50%;
+      background: var(--purple); color: #fff;
+      min-width: 22px; height: 22px; border-radius: 5px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: .85rem; flex-shrink: 0; margin-top: 3px;
+      font-weight: 700; font-size: .75rem; flex-shrink: 0; margin-top: 4px;
     }
 
     /* ── Metrics ── */
-    .metric-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 20px; }
-    @media(max-width:600px){ .metric-grid { grid-template-columns: repeat(2,1fr); } }
+    .metric-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 18px; }
+    @media(max-width:580px){ .metric-grid { grid-template-columns: repeat(2,1fr); } }
     .metric-cell {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 10px; padding: 16px 14px; text-align: center;
+      background: #faf9ff; border: 1px solid #ede9fe;
+      border-radius: 8px; padding: 13px 10px; text-align: center;
     }
-    .metric-cell .m-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; }
-    .metric-cell .m-val   { font-size: 1.75rem; font-weight: 900; margin: 6px 0 2px; }
-    .metric-cell .m-class { font-size: .76rem; color: var(--muted); }
+    .m-label { font-size: .67rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; }
+    .m-val   { font-size: 1.45rem; font-weight: 800; margin: 5px 0 2px; }
+    .m-class { font-size: .7rem; color: var(--muted); }
 
     /* ── Progress bars ── */
-    .pbar-row { margin-bottom: 13px; }
-    .pbar-label { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 600; margin-bottom: 5px; }
-    .pbar { height: 9px; background: var(--border); border-radius: 999px; overflow: hidden; }
+    .pbar-row { margin-bottom: 10px; }
+    .pbar-label { display: flex; justify-content: space-between; font-size: .81rem; font-weight: 600; margin-bottom: 4px; }
+    .pbar-label span:last-child { font-weight: 400; color: var(--muted); }
+    .pbar { height: 6px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
     .pbar-fill { height: 100%; border-radius: 999px; }
 
     /* ── Model Cards ── */
     .model-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 30px;
-      margin-bottom: 28px;
-      border-left: 5px solid var(--primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,.07);
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 22px; margin-bottom: 16px;
+      border-top: 4px solid #c4b5fd;
     }
-    .model-card.best { border-left-color: var(--success); }
-    .model-card.alt  { border-left-color: var(--info); }
-    .model-header { margin-bottom: 18px; }
-    .model-title  { font-size: 1.25rem; font-weight: 900; color: var(--text); margin-bottom: 8px; }
-    .model-tags   { display: flex; gap: 7px; flex-wrap: wrap; }
-    .model-desc   { color: var(--muted); font-size: .92rem; margin: 14px 0 18px; line-height: 1.65; }
+    .model-card.best { border-top-color: #6ee7b7; }
+    .model-card.alt  { border-top-color: #93c5fd; }
+    .model-header {
+      cursor: pointer; user-select: none;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    }
+    .model-header:hover .model-title { color: var(--purple); }
+    .model-header-left { flex: 1; }
+    .model-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .model-tags  { display: flex; gap: 5px; flex-wrap: wrap; }
+    .model-desc  { color: var(--muted); font-size: .87rem; margin: 12px 0 14px; line-height: 1.7; }
+    .model-collapse-hint { font-size: .7rem; color: var(--muted); margin-top: 5px; }
+    .accordion-icon {
+      font-size: .85rem; color: var(--muted); flex-shrink: 0; margin-top: 6px;
+      transition: transform 0.3s ease; display: inline-block;
+    }
+    .accordion-icon.open { transform: rotate(180deg); }
+    .model-body { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+    .model-body.open { max-height: 5000px; padding-top: 14px; }
 
     /* ── Footer ── */
     footer {
       background: #0f172a; color: #94a3b8;
-      text-align: center; padding: 36px 24px;
-      font-size: .87rem; margin-top: 64px;
+      text-align: center; padding: 30px 24px;
+      font-size: .83rem; margin-top: 48px;
     }
     footer strong { color: #e2e8f0; }
-    .footer-team { margin-top: 10px; font-size: .8rem; opacity: .65; }
+    .footer-team { margin-top: 8px; font-size: .75rem; opacity: .55; }
 
     @media print {
       .hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-      .chart-wrap, .card, .tbl-wrap, .model-card { break-inside: avoid; }
-      .container { max-width: 100%; padding: 20px; }
+      .model-body { max-height: none !important; overflow: visible !important; padding-top: 14px !important; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<div id="scroll-progress"></div>
+<button id="back-to-top" aria-label="Voltar ao topo">↑</button>
+
+<!-- ══ HERO ══ -->
 <div class="hero">
-  <div class="hero-content">
-    <div class="hero-eyebrow">FIAP · Pós IA Para Desenvolvedores · Tech Challenge Fase 1</div>
-    <h1>Predição de Risco<br>Câncer do Colo do Útero</h1>
-    <p>Classificação de risco com Machine Learning sobre dados clínicos do Hospital Universitário de Caracas, Venezuela — dataset UCI.</p>
+  <div class="hero-eyebrow">FIAP · Pós IA Para Desenvolvedores · Tech Challenge Fase 1</div>
+  <h1>Predição de Risco<br>Câncer do Colo do Útero</h1>
+  <p class="hero-sub">Classificação de risco com Machine Learning sobre dados clínicos do Hospital Universitário de Caracas — dataset UCI.</p>
 
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-val">858</div>
-        <div class="hero-stat-lbl">Pacientes no dataset</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val">6%</div>
-        <div class="hero-stat-lbl">Biópsia positiva</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val">0,737</div>
-        <div class="hero-stat-lbl">Melhor AUROC</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val">36%</div>
-        <div class="hero-stat-lbl">Recall (câncer)</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-val">3</div>
-        <div class="hero-stat-lbl">Modelos treinados</div>
-      </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">858</div>
+      <div class="hero-stat-lbl">Pacientes</div>
     </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">55</div>
+      <div class="hero-stat-lbl">Biópsia positiva</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">803</div>
+      <div class="hero-stat-lbl">Biópsia negativa</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">0,737</div>
+      <div class="hero-stat-lbl">Melhor AUROC</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">3</div>
+      <div class="hero-stat-lbl">Modelos treinados</div>
+    </div>
+  </div>
 
-    <div class="hero-pills">
-      <span>Python 3</span>
-      <span>Scikit-learn</span>
-      <span>imbalanced-learn</span>
-      <span>Pandas · NumPy</span>
-      <span>Streamlit</span>
-      <span>Chart.js</span>
-    </div>
+  <div class="hero-pills">
+    <span>Python 3</span>
+    <span>Scikit-learn</span>
+    <span>imbalanced-learn</span>
+    <span>Pandas · NumPy</span>
+    <span>Streamlit</span>
+  </div>
 
-    <div class="team-box">
-      <div class="team-title">Equipe</div>
-      <div class="team-member"><strong>Jefferson Antônio Pantoja Silva</strong>jeffkd35@gmail.com</div>
-      <div class="team-member"><strong>Wilson Lima da Silva</strong>wilson.slima@gmail.com</div>
-      <div class="team-member"><strong>Gustavo Lopes da Silva</strong>gustavo_lsilva@hotmail.com</div>
-      <div class="team-member"><strong>Felipe Soeiro Lopes</strong>felipesoeiro.contato@outlook.com.br</div>
-      <div class="team-member"><strong>Vinicius Tavares Sousa da Silva</strong>viniciustavares2014@gmail.com</div>
-    </div>
+  <div class="team-box">
+    <div class="team-title">Equipe</div>
+    <div class="team-member"><strong>Jefferson Antônio Pantoja Silva</strong>jeffkd35@gmail.com</div>
+    <div class="team-member"><strong>Wilson Lima da Silva</strong>wilson.slima@gmail.com</div>
+    <div class="team-member"><strong>Gustavo Lopes da Silva</strong>gustavo_lsilva@hotmail.com</div>
+    <div class="team-member"><strong>Felipe Soeiro Lopes</strong>felipesoeiro.contato@outlook.com.br</div>
+    <div class="team-member"><strong>Vinicius Tavares Sousa da Silva</strong>viniciustavares2014@gmail.com</div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- ═══════════ SUMÁRIO ═══════════ -->
+  <!-- ══ SUMÁRIO ══ -->
   <div class="toc">
     <h2>Sumário</h2>
     <ol>
@@ -339,23 +383,18 @@
     </ol>
   </div>
 
-  <!-- ═══════════ SEÇÃO 1 — VISÃO GERAL ═══════════ -->
+  <!-- ══ SEÇÃO 1 ══ -->
   <div class="section" id="s1">
     <div class="section-header">
       <div class="section-num">1</div>
       <h2>Visão Geral do Dataset</h2>
     </div>
 
-    <div class="callout info">
-      <div class="callout-icon">ℹ️</div>
-      <div class="callout-body">
-        <strong>O que é este dataset?</strong>
-        O <em>"Risk Factors Cervical Cancer"</em> foi coletado no Hospital Universitário de Caracas, Venezuela,
-        e está disponível no <a href="https://archive.ics.uci.edu/dataset/383/cervical+cancer+risk+factors" style="color:var(--info)">UCI Machine Learning Repository</a>.
-        Contém dados demográficos, hábitos e histórico médico de 858 pacientes.
-        O objetivo é identificar quais apresentam maior risco de câncer do colo do útero para auxiliar a triagem clínica.
-      </div>
-    </div>
+    <p class="section-intro">
+      O <em>Risk Factors Cervical Cancer</em> foi coletado no Hospital Universitário de Caracas, Venezuela
+      e está disponível no UCI Machine Learning Repository. Contém dados demográficos, hábitos e histórico
+      médico de 858 pacientes para auxiliar triagem de risco de câncer do colo do útero.
+    </p>
 
     <div class="cards">
       <div class="card">
@@ -369,45 +408,36 @@
         <div class="card-sub">Colunas brutas</div>
       </div>
       <div class="card success">
-        <div class="card-label">Targets disponíveis</div>
-        <div class="card-value">4</div>
-        <div class="card-sub">Hinselmann · Schiller · Citologia · Biópsia</div>
+        <div class="card-label">Biópsia Negativa</div>
+        <div class="card-value">803</div>
+        <div class="card-sub">93,6% — pacientes saudáveis</div>
       </div>
-      <div class="card warning">
+      <div class="card danger">
         <div class="card-label">Biópsia Positiva</div>
-        <div class="card-value">6%</div>
-        <div class="card-sub">55 casos positivos de 858</div>
+        <div class="card-value">55</div>
+        <div class="card-sub">6,4% — classe minoritária crítica</div>
       </div>
       <div class="card info">
         <div class="card-label">Idade Média</div>
         <div class="card-value">26,8</div>
-        <div class="card-sub">Desvio padrão: 8,5 anos</div>
+        <div class="card-sub">dp = 8,5 anos</div>
       </div>
-      <div class="card danger">
-        <div class="card-label">Dados Faltantes</div>
-        <div class="card-value">Sim</div>
-        <div class="card-sub">Registrados como "?" no original</div>
-      </div>
-    </div>
-
-    <div class="chart-wrap">
-      <h3>Variáveis Alvo — Taxa de Positividade dos Exames</h3>
-      <canvas id="chartTargets" height="90"></canvas>
     </div>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
         <strong>Dataset Fortemente Desbalanceado</strong>
-        Todos os quatro exames têm taxas de positividade muito baixas (4%–9%).
-        Isso é esperado em triagem clínica, mas torna o aprendizado de máquina desafiador:
-        um modelo ingênuo que prediz "sempre negativo" já alcança ~94% de acurácia.
-        Por isso utilizamos <code>class_weight={0:1, 1:10}</code> nos classificadores
-        para penalizar 10× mais os erros na classe positiva.
+        Todos os quatro exames têm positividade muito baixa (4%–9%). Um modelo ingênuo que prediz
+        "sempre negativo" já alcança ~94% de acurácia — por isso usamos <code>class_weight={0:1, 1:10}</code>.
       </div>
     </div>
 
-    <h3 style="margin-bottom:14px; font-size:1.05rem; font-weight:700;">O que cada variável alvo representa?</h3>
+    <div class="chart-wrap">
+      <h3>Taxa de Positividade por Variável Alvo</h3>
+      <canvas id="chartTargets" height="90"></canvas>
+    </div>
+
     <div class="tbl-wrap">
       <table>
         <thead>
@@ -416,133 +446,104 @@
         <tbody>
           <tr>
             <td><strong>Hinselmann</strong></td>
-            <td>Colposcopia com ácido acético — visualização direta do colo do útero</td>
+            <td>Colposcopia com ácido acético</td>
             <td><span class="badge yellow">4,1%</span></td>
             <td>Diagnóstico visual, operador-dependente</td>
           </tr>
           <tr>
             <td><strong>Schiller</strong></td>
-            <td>Teste de Schiller (solução de iodo) — detecta células anormais pela coloração</td>
+            <td>Teste com solução de iodo — detecta células anormais</td>
             <td><span class="badge yellow">8,6%</span></td>
             <td>Alta sensibilidade, menor especificidade</td>
           </tr>
           <tr>
             <td><strong>Citologia</strong></td>
-            <td>Papanicolau (esfregaço cervical) — análise microscópica de células</td>
+            <td>Papanicolau — análise microscópica de células</td>
             <td><span class="badge yellow">5,1%</span></td>
             <td>Exame padrão de rastreio cervical</td>
           </tr>
           <tr>
             <td><strong>Biopsia ⭐</strong></td>
-            <td>Retirada de fragmento de tecido para análise histológica — padrão ouro</td>
-            <td><span class="badge red">6%</span></td>
-            <td><strong>Target principal</strong> — mais representativa clinicamente</td>
+            <td>Retirada de tecido para análise histológica</td>
+            <td><span class="badge red">6,4%</span></td>
+            <td><strong>Target principal</strong> — padrão ouro clínico</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- ═══════════ SEÇÃO 2 — EDA ═══════════ -->
+  <!-- ══ SEÇÃO 2 ══ -->
   <div class="section" id="s2">
     <div class="section-header">
       <div class="section-num">2</div>
       <h2>Análise Exploratória dos Dados (EDA)</h2>
     </div>
 
-    <p style="margin-bottom:22px; color:var(--muted);">
-      A EDA revela distribuições, padrões e problemas antes de qualquer pré-processamento.
+    <p class="section-intro">
+      Idade média 26,8 anos (dp=8,5), distribuição assimétrica com pacientes até 84 anos.
+      Prevalência de tabagismo 14,6% e contraceptivos hormonais 64,1%.
+      Nenhum atributo isolado tem correlação forte com a Biópsia — problema de natureza não linear.
     </p>
 
     <div class="chart-row">
       <div class="chart-wrap">
-        <h3>Distribuição de Idade das Pacientes</h3>
+        <h3>Distribuição de Idade</h3>
         <canvas id="chartIdade" height="180"></canvas>
       </div>
       <div class="chart-wrap">
-        <h3>Número de Parceiros Sexuais</h3>
-        <canvas id="chartParceiros" height="180"></canvas>
-      </div>
-    </div>
-
-    <div class="callout info">
-      <div class="callout-icon">📊</div>
-      <div class="callout-body">
-        <strong>Perfil das Pacientes</strong>
-        Idade média 26,8 anos (dp=8,5), com assimetria positiva — pacientes mais velhas (até 84 anos)
-        puxam a média. A maioria é jovem (13–27 anos). Número de parceiros sexuais tem mediana 2, mas
-        com outliers fortes (máximo 28). Prevalência de tabagismo de 14,6% e uso de contraceptivos
-        hormonais de 64,1%.
+        <h3>Distribuição Biópsia — 803 negativos / 55 positivos</h3>
+        <canvas id="chartBiopsia" height="180"></canvas>
       </div>
     </div>
 
     <div class="chart-wrap">
-      <h3>Percentual de Dados Faltantes por Variável</h3>
+      <h3>Dados Faltantes por Variável (%)</h3>
       <canvas id="chartMissing" height="110"></canvas>
     </div>
 
     <div class="callout warn">
       <div class="callout-icon">⚠️</div>
       <div class="callout-body">
-        <strong>Por que existem dados faltantes?</strong>
-        Pacientes optaram por não responder certas perguntas por privacidade — especialmente sobre
-        DSTs e hábitos sexuais. No dataset original, esses valores foram preenchidos com "?" e
-        interpretados como <code>NaN</code>. As colunas <strong>STDs: Time since first/last diagnosis</strong>
-        têm mais de 91% de dados faltantes — apenas 71 pacientes com diagnóstico de DST responderam.
+        <strong>Alto índice de dados faltantes</strong>
+        <em>STDs: Time since first/last diagnosis</em> têm &gt;91% de missing — apenas 71 pacientes
+        com diagnóstico de DST responderam. Colunas <code>STDs:AIDS</code> e
+        <code>STDs:cervical condylomatosis</code> foram removidas (variância zero em todos os 858 registros).
       </div>
     </div>
 
     <div class="tbl-wrap">
       <table>
         <thead>
-          <tr><th>Variável</th><th>Válidos</th><th>Média</th><th>Desvio Padrão</th><th>Mín.</th><th>Máx.</th></tr>
+          <tr><th>Variável</th><th>Válidos</th><th>Média</th><th>dp</th><th>Mín.</th><th>Máx.</th></tr>
         </thead>
         <tbody>
           <tr><td>Idade</td><td>858 (100%)</td><td>26,8</td><td>8,5</td><td>13</td><td>84</td></tr>
           <tr><td>Nº de Parceiros Sexuais</td><td>832 (97%)</td><td>2,5</td><td>1,7</td><td>1</td><td>28</td></tr>
           <tr><td>Primeira Relação Sexual (anos)</td><td>851 (99%)</td><td>17,0</td><td>2,8</td><td>10</td><td>32</td></tr>
           <tr><td>Número de Gestações</td><td>802 (93%)</td><td>2,3</td><td>1,4</td><td>0</td><td>11</td></tr>
-          <tr><td>Fuma (0/1)</td><td>845 (98%)</td><td>14,6%</td><td>—</td><td>0</td><td>1</td></tr>
-          <tr><td>Contraceptivo Hormonal (0/1)</td><td>750 (87%)</td><td>64,1%</td><td>—</td><td>0</td><td>1</td></tr>
-          <tr><td>DIU (0/1)</td><td>741 (86%)</td><td>11,2%</td><td>—</td><td>0</td><td>1</td></tr>
-          <tr><td>DST (0/1)</td><td>753 (88%)</td><td>10,5%</td><td>—</td><td>0</td><td>1</td></tr>
-          <tr><td>DST — Tempo desde 1º diagnóst.</td><td>71 (8%)</td><td>6,1</td><td>5,9</td><td>1</td><td>22</td></tr>
-          <tr><td><strong>Biopsia (target)</strong></td><td>858 (100%)</td><td>6%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td>Fuma</td><td>845 (98%)</td><td>14,6%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td>Contraceptivo Hormonal</td><td>750 (87%)</td><td>64,1%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td>DIU</td><td>741 (86%)</td><td>11,2%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td>DST (qualquer)</td><td>753 (88%)</td><td>10,5%</td><td>—</td><td>0</td><td>1</td></tr>
+          <tr><td><strong>Biopsia (target)</strong></td><td>858 (100%)</td><td>6,4%</td><td>—</td><td>0</td><td>1</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="chart-row">
       <div class="chart-wrap">
-        <h3>Distribuição Biópsia: Saudável vs. Câncer</h3>
-        <canvas id="chartBiopsia" height="200"></canvas>
+        <h3>Parceiros Sexuais</h3>
+        <canvas id="chartParceiros" height="180"></canvas>
       </div>
       <div class="chart-wrap">
-        <h3>Prevalência de DSTs no Dataset</h3>
-        <canvas id="chartDSTs" height="200"></canvas>
-      </div>
-    </div>
-
-    <div class="callout bad">
-      <div class="callout-icon">🔍</div>
-      <div class="callout-body">
-        <strong>Correlações Fracas — Problema Não Linear</strong>
-        A matriz de correlação mostrou que nenhum atributo isolado tem correlação forte com a Biópsia confirmando a natureza não linear do problema e justifica o uso de Random Forest e Árvore de Decisão.
-      </div>
-    </div>
-
-    <div class="callout bad">
-      <div class="callout-icon">🗑️</div>
-      <div class="callout-body">
-        <strong>Colunas Removidas por Ausência de Variabilidade</strong>
-        As colunas <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> foram removidas
-        porque <strong>todos</strong> os 858 registros tinham valor 0. Colunas sem variância não
-        contribuem para o modelo e podem introduzir ruído.
+        <h3>Prevalência de DSTs</h3>
+        <canvas id="chartDSTs" height="180"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ SEÇÃO 3 — PRÉ-PROCESSAMENTO ═══════════ -->
+  <!-- ══ SEÇÃO 3 ══ -->
   <div class="section" id="s3">
     <div class="section-header">
       <div class="section-num">3</div>
@@ -553,90 +554,31 @@
       <div class="callout-icon">⚙️</div>
       <div class="callout-body">
         <strong>Pipeline sklearn encapsulado</strong>
-        Todo o pré-processamento foi encapsulado em um <code>Pipeline</code>,
-        garantindo que as mesmas transformações sejam aplicadas no treino e no teste,
-        sem vazamento de dados (<em>data leakage</em>).
+        Todo o pré-processamento foi encapsulado em um <code>Pipeline</code>, garantindo as mesmas
+        transformações no treino e teste sem vazamento de dados.
       </div>
     </div>
 
-    <ul class="steps">
-      <li>
-        <div>
-          <strong>Remoção de colunas sem variabilidade</strong><br>
-          <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> removidas — 858 valores iguais a zero, zero variância.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Tratamento de valores nulos + Missing Indicators</strong><br>
-          Para cada coluna com <code>NaN</code>: criada coluna <code>_preenchido</code>
-          (1 = respondeu, 0 = não respondeu) e valores nulos substituídos pela média.
-          A informação de recusa é estatisticamente relevante e preservada.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Agrupamento de colunas indicadoras idênticas</strong><br>
-          Colunas com exatamente o mesmo padrão de resposta (ex.: todas as 11 variáveis de DST
-          com 87,76% de respostas) foram consolidadas em uma única coluna <code>_respondido</code>.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Redução de redundância — Tabagismo</strong><br>
-          <code>Smokes (years)</code> × <code>Smokes (packs/year)</code> combinados em
-          <code>smoke_year_packs</code> (exposição acumulada). Se <code>Smokes=0</code>, os outros campos são zerados.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Transformação logarítmica em variáveis demográficas</strong><br>
-          <code>log1p</code> aplicado em: <em>Age, Number of sexual partners, First sexual intercourse,
-          Num of pregnancies</em>. Reduz impacto de outliers e normaliza distribuições assimétricas.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Feature Engineering — Contraceptivos</strong><br>
-          Criadas: <code>contraceptive_mid_risk</code> (uso entre 3–15 anos) e
-          <code>contraceptive_exposure</code> (usa × anos de uso). Se <code>HC=0</code>, anos de uso zerado.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Remoção de redundância entre STDs temporais</strong><br>
-          <code>STDs: Time since first diagnosis</code> removida — redundância quase perfeita
-          com <code>STDs: Time since last diagnosis</code> (correlação diagonal nos gráficos de dispersão).
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Criação de atributos estratégicos combinados</strong><br>
-          <code>sexual_risk</code> (parceiros/idade), <code>smoke_age_risk</code>, <code>has_std</code>,
-          <code>std_age_risk</code>, <code>combined_risk</code> — combinações que capturam interações não lineares.
-        </div>
-      </li>
+    <ul class="steps" style="margin: 20px 0;">
+      <li><div><strong>Remoção de colunas sem variabilidade</strong> — <code>STDs:AIDS</code> e <code>STDs:cervical condylomatosis</code> (858 valores = 0).</div></li>
+      <li><div><strong>Missing Indicators</strong> — criada coluna <code>_preenchido</code> (1 = respondeu) para cada feature com NaN; nulos substituídos pela média.</div></li>
+      <li><div><strong>Agrupamento de indicadores idênticos</strong> — todas as 11 variáveis de DST com 87,76% de resposta consolidadas em <code>_respondido</code>.</div></li>
+      <li><div><strong>Redução de redundância — Tabagismo</strong> — <code>Smokes (years)</code> × <code>Smokes (packs/year)</code> → <code>smoke_year_packs</code>.</div></li>
+      <li><div><strong>Transformação log1p</strong> — aplicada em Age, parceiros, primeira relação, gestações. Reduz outliers e normaliza assimetria.</div></li>
+      <li><div><strong>Feature engineering — Contraceptivos</strong> — <code>contraceptive_mid_risk</code> (uso 3–15 anos) e <code>contraceptive_exposure</code>.</div></li>
+      <li><div><strong>Remoção temporal de STDs</strong> — <code>STDs: Time since first diagnosis</code> removida por redundância com a coluna "last".</div></li>
+      <li><div><strong>Atributos estratégicos combinados</strong> — <code>sexual_risk</code>, <code>smoke_age_risk</code>, <code>has_std</code>, <code>std_age_risk</code>, <code>combined_risk</code>.</div></li>
     </ul>
 
-    <div class="chart-wrap" style="margin-top:28px;">
+    <div class="chart-wrap">
       <h3>Taxa de Resposta por Grupo de Variáveis</h3>
       <canvas id="chartMissingGroups" height="100"></canvas>
-    </div>
-
-    <div class="callout ok" style="margin-top:8px;">
-      <div class="callout-icon">✅</div>
-      <div class="callout-body">
-        <strong>Resultado do Pré-processamento</strong>
-        O dataset passou de 29 colunas para ~42 features enriquecidas, sem nenhum valor nulo.
-        O pré-processamento melhorou a importância relativa das features engineered no modelo,
-        confirmando que o modelo precisa capturar relações não lineares.
-      </div>
     </div>
 
     <div class="tbl-wrap">
       <table>
         <thead>
-          <tr><th>Grupo de Variáveis</th><th>% Respondidas</th><th>% Faltantes</th><th>Coluna Indicadora Criada</th></tr>
+          <tr><th>Grupo</th><th>% Respondidas</th><th>% Faltantes</th><th>Indicador Criado</th></tr>
         </thead>
         <tbody>
           <tr><td>DSTs (11 colunas)</td><td>87,8%</td><td>12,2%</td><td><code>STDs_respondido</code></td></tr>
@@ -650,29 +592,22 @@
     </div>
   </div>
 
-  <!-- ═══════════ SEÇÃO 4 — MODELAGEM ═══════════ -->
+  <!-- ══ SEÇÃO 4 ══ -->
   <div class="section" id="s4">
     <div class="section-header">
       <div class="section-num">4</div>
       <h2>Modelagem — Modelos Utilizados e Comparativo</h2>
     </div>
 
-    <div class="callout info">
-      <div class="callout-icon">🔬</div>
-      <div class="callout-body">
-        <strong>Estratégia de Experimentação</strong>
-        Três cenários progressivos foram testados para superar o recall crítico de 9% do baseline.
-        Todos usam divisão <strong>80% treino / 20% teste</strong> com <code>stratify=y</code> e
-        <code>random_state=42</code>, garantindo reprodutibilidade e proporcionalidade das classes
-        (11 positivos nos 172 casos de teste).
-      </div>
-    </div>
+    <p class="section-intro">
+      Três cenários progressivos para superar o recall crítico de 9% do baseline.
+      Todos usam divisão <strong>80%/20%</strong> com <code>stratify=y</code> e <code>random_state=42</code>
+      — 11 positivos nos 172 casos de teste.
+    </p>
 
-    <!-- Pipeline code -->
-    <div class="chart-wrap" style="margin-bottom:32px;">
-      <h3>Pipeline sklearn — Etapas Compartilhadas pelos 3 Modelos</h3>
+    <div class="chart-wrap" style="margin-bottom:24px;">
+      <h3>Pipeline sklearn — Etapas Compartilhadas</h3>
 <pre><code><span class="kw">from</span> imblearn.pipeline <span class="kw">import</span> Pipeline
-<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> FunctionTransformer
 
 Pipeline([
     (<span class="st">'remover'</span>,              FunctionTransformer(remover_colunas_sem_variacao)),
@@ -683,249 +618,114 @@ Pipeline([
     (<span class="st">'contraceptivos'</span>,       FunctionTransformer(transformar_contraceptivos)),
     (<span class="st">'remover_std_tempo'</span>,    FunctionTransformer(remover_coluna_std_tempo)),
     (<span class="st">'novos_atributos'</span>,      FunctionTransformer(criar_atributos_estrategicos)),
-    <span class="cm"># ↓ varia por modelo ↓</span>
-    (<span class="st">'smote'</span>, <span class="cl">SMOTE</span>(...)),          <span class="cm"># apenas Modelo 2</span>
-    (<span class="st">'model'</span>, Classificador(...)),  <span class="cm"># RandomForest ou DecisionTree</span>
+    (<span class="st">'smote'</span>,  <span class="cl">SMOTE</span>(...)),          <span class="cm"># apenas Modelo 2</span>
+    (<span class="st">'model'</span>,  Classificador(...)),
 ])</code></pre>
     </div>
 
-    <!-- ─── MODELO 1 ─── -->
+    <!-- Modelo 1 -->
     <div class="model-card">
       <div class="model-header">
         <div class="model-title">Modelo 1 — Random Forest Baseline</div>
         <div class="model-tags">
           <span class="badge purple">RandomForestClassifier</span>
           <span class="badge gray">sem SMOTE</span>
-          <span class="badge blue">GridSearchCV · cv=5 · scoring=f1</span>
+          <span class="badge blue">GridSearchCV · cv=5</span>
         </div>
       </div>
       <p class="model-desc">
-        Treinado com tratamento mínimo de nulos (apenas imputação pela média), sem o pipeline completo.
-        O <strong>GridSearchCV</strong> foi aplicado para encontrar os melhores hiperparâmetros
-        entre as combinações abaixo. O melhor modelo final utilizou os parâmetros destacados.
+        Treinado com imputação pela média, sem pipeline completo.
+        GridSearchCV buscou os melhores hiperparâmetros. Melhor configuração: 200 árvores, class_weight={0:1, 1:10}.
       </p>
-
-<pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> GridSearchCV
-<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
-
-<span class="cm"># Grade de hiperparâmetros testada</span>
-param_grid = {
-    <span class="st">'model__n_estimators'</span>:     [<span class="nm">200</span>, <span class="nm">400</span>],
-    <span class="st">'model__max_depth'</span>:        [<span class="kw">None</span>, <span class="nm">10</span>],
-    <span class="st">'model__min_samples_leaf'</span>: [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">4</span>],
-    <span class="st">'model__class_weight'</span>:     [{<span class="nm">0</span>:<span class="nm">1</span>, <span class="nm">1</span>:<span class="nm">10</span>}, {<span class="nm">0</span>:<span class="nm">1</span>, <span class="nm">1</span>:<span class="nm">20</span>}]
-}
-
-GridSearchCV(pipeline, param_grid, cv=<span class="nm">5</span>, scoring=<span class="st">'f1'</span>, n_jobs=<span class="nm">-1</span>)
-
-<span class="cm"># ── Melhor configuração encontrada pelo GridSearchCV ──</span>
-<span class="cl">RandomForestClassifier</span>(
-    class_weight={<span class="nm">0</span>: <span class="nm">1</span>, <span class="nm">1</span>: <span class="nm">10</span>},  <span class="cm"># penaliza 10× erros na classe positiva</span>
-    n_estimators=<span class="nm">200</span>,             <span class="cm"># 200 árvores na floresta</span>
-    min_samples_leaf=<span class="nm">1</span>,
-    random_state=<span class="nm">42</span>
+<pre><code><span class="cl">RandomForestClassifier</span>(
+    class_weight={<span class="nm">0</span>:<span class="nm">1</span>, <span class="nm">1</span>:<span class="nm">10</span>}, n_estimators=<span class="nm">200</span>,
+    min_samples_leaf=<span class="nm">1</span>, random_state=<span class="nm">42</span>
 )</code></pre>
-
       <div class="metric-grid">
-        <div class="metric-cell">
-          <div class="m-label">Acurácia Geral</div>
-          <div class="m-val" style="color:var(--success)">94%</div>
-          <div class="m-class">172 amostras de teste</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Precisão (Câncer)</div>
-          <div class="m-val" style="color:var(--warning)">50%</div>
-          <div class="m-class">Das predições positivas</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Recall (Câncer)</div>
-          <div class="m-val" style="color:var(--danger)">9%</div>
-          <div class="m-class">Casos reais capturados</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">F1-Score (Câncer)</div>
-          <div class="m-val" style="color:var(--danger)">0,15</div>
-          <div class="m-class">Média harmônica P × R</div>
-        </div>
+        <div class="metric-cell"><div class="m-label">Acurácia</div><div class="m-val" style="color:#047857">94%</div><div class="m-class">172 amostras</div></div>
+        <div class="metric-cell"><div class="m-label">Precisão</div><div class="m-val" style="color:#d97706">50%</div><div class="m-class">câncer</div></div>
+        <div class="metric-cell"><div class="m-label">Recall</div><div class="m-val" style="color:#dc2626">9%</div><div class="m-class">câncer</div></div>
+        <div class="metric-cell"><div class="m-label">F1-Score</div><div class="m-val" style="color:#dc2626">0,15</div><div class="m-class">câncer</div></div>
       </div>
-
       <div class="callout bad" style="margin-bottom:0;">
         <div class="callout-icon">❌</div>
-        <div class="callout-body">
-          Recall de apenas <strong>9%</strong> — o modelo ignora 91% dos casos reais de câncer.
-          Insuficiente para triagem médica mesmo com alta acurácia global (94%).
-        </div>
+        <div class="callout-body">Recall de apenas 9% — ignora 91% dos casos reais de câncer. Insuficiente para triagem clínica.</div>
       </div>
     </div>
 
-    <!-- ─── MODELO 2 ─── -->
+    <!-- Modelo 2 -->
     <div class="model-card best">
       <div class="model-header">
-        <div class="model-title">Modelo 2 — Random Forest + SMOTE + Threshold 0.41 &nbsp;⭐ Melhor Resultado</div>
+        <div class="model-title">Modelo 2 — Random Forest + SMOTE + Threshold 0.41 &nbsp;⭐ Melhor</div>
         <div class="model-tags">
           <span class="badge purple">RandomForestClassifier</span>
-          <span class="badge green">SMOTE · random_state=42</span>
-          <span class="badge green">Threshold ajustado: 0.41</span>
-          <span class="badge green">Melhor Resultado</span>
+          <span class="badge green">SMOTE</span>
+          <span class="badge green">Threshold 0.41</span>
         </div>
       </div>
       <p class="model-desc">
-        O SMOTE (<em>Synthetic Minority Oversampling Technique</em>) gera exemplos sintéticos da classe minoritária
-        no espaço de features, balanceando o treino. O limiar de decisão foi ajustado de 0,50 para <strong>0,41</strong>,
-        aumentando o Recall de 9% para 36%. Importante: o SMOTE sozinho <em>piorou</em> o F1 —
-        a combinação <code>SMOTE + class_weight</code> foi o que trouxe o ganho real.
+        SMOTE gera exemplos sintéticos da classe minoritária. O limiar foi ajustado de 0,50 para 0,41,
+        elevando o Recall de 9% para 36%. A combinação <code>SMOTE + class_weight</code> foi decisiva
+        — isoladamente, nenhum trouxe ganho significativo.
       </p>
+<pre><code><span class="cl">SMOTE</span>(random_state=<span class="nm">42</span>)
 
-<pre><code><span class="kw">from</span> imblearn.over_sampling <span class="kw">import</span> SMOTE
-<span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
-
-<span class="cm"># Passo de oversampling inserido no Pipeline antes do treino</span>
-<span class="cl">SMOTE</span>(random_state=<span class="nm">42</span>)
-
-<span class="cm"># Classificador — SMOTE + class_weight juntos melhoram o F1</span>
 <span class="cl">RandomForestClassifier</span>(
-    class_weight={<span class="nm">0</span>: <span class="nm">1</span>, <span class="nm">1</span>: <span class="nm">10</span>},  <span class="cm"># penaliza 10× erros na classe positiva</span>
-    n_estimators=<span class="nm">200</span>,             <span class="cm"># 200 árvores na floresta</span>
-    min_samples_leaf=<span class="nm">1</span>,
-    random_state=<span class="nm">42</span>
+    class_weight={<span class="nm">0</span>:<span class="nm">1</span>, <span class="nm">1</span>:<span class="nm">10</span>}, n_estimators=<span class="nm">200</span>,
+    min_samples_leaf=<span class="nm">1</span>, random_state=<span class="nm">42</span>
 )
 
-<span class="cm"># Ajuste do limiar de decisão (padrão = 0.50)</span>
-y_proba = pipeline_oversampling.predict_proba(X_test)[:, <span class="nm">1</span>]
-threshold = <span class="nm">0.41</span>
-y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre>
-
-      <div class="callout info" style="margin-bottom:16px;">
-        <div class="callout-icon">💡</div>
-        <div class="callout-body">
-          <strong>Por que SMOTE + class_weight juntos?</strong>
-          O SMOTE balanceia o treino gerando amostras sintéticas; o <code>class_weight</code>
-          ainda penaliza os erros na classe positiva. Testados isoladamente, nenhum trouxe ganho
-          significativo — a combinação foi decisiva para elevar o F1 de 0,15 para 0,33.
-        </div>
-      </div>
-
+<span class="cm"># Ajuste do limiar (padrão = 0.50)</span>
+y_pred = (pipeline.predict_proba(X_test)[:, <span class="nm">1</span>] > <span class="nm">0.41</span>).astype(<span class="nb">int</span>)</code></pre>
       <div class="metric-grid">
-        <div class="metric-cell">
-          <div class="m-label">Acurácia Geral</div>
-          <div class="m-val" style="color:var(--warning)">91%</div>
-          <div class="m-class">172 amostras de teste</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Precisão (Câncer)</div>
-          <div class="m-val" style="color:var(--warning)">31%</div>
-          <div class="m-class">Das predições positivas</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Recall (Câncer)</div>
-          <div class="m-val" style="color:var(--success)">36%</div>
-          <div class="m-class">↑ de 9% — ganho de 4×</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">AUROC</div>
-          <div class="m-val" style="color:var(--success)">0,737</div>
-          <div class="m-class">Poder discriminatório</div>
-        </div>
+        <div class="metric-cell"><div class="m-label">Acurácia</div><div class="m-val" style="color:#d97706">91%</div><div class="m-class">172 amostras</div></div>
+        <div class="metric-cell"><div class="m-label">Precisão</div><div class="m-val" style="color:#d97706">31%</div><div class="m-class">câncer</div></div>
+        <div class="metric-cell"><div class="m-label">Recall</div><div class="m-val" style="color:#047857">36%</div><div class="m-class">↑ de 9%</div></div>
+        <div class="metric-cell"><div class="m-label">AUROC</div><div class="m-val" style="color:#047857">0,737</div><div class="m-class">discriminação</div></div>
       </div>
-
-      <div class="chart-wrap" style="margin-top:4px; margin-bottom:0;">
-        <h3>Métricas Detalhadas — Melhor Modelo (RF + SMOTE + Threshold 0.41)</h3>
-        <div class="pbar-row">
-          <div class="pbar-label"><span>Acurácia Global</span><span style="color:var(--success)">91%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:91%;background:var(--success)"></div></div>
-        </div>
-        <div class="pbar-row">
-          <div class="pbar-label"><span>Recall — Saudável (classe 0)</span><span style="color:var(--success)">94%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:94%;background:var(--success)"></div></div>
-        </div>
-        <div class="pbar-row">
-          <div class="pbar-label"><span>Precisão — Saudável (classe 0)</span><span style="color:var(--success)">96%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:96%;background:var(--success)"></div></div>
-        </div>
-        <div class="pbar-row">
-          <div class="pbar-label"><span>Precisão — Câncer (classe 1)</span><span style="color:var(--warning)">31%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:31%;background:var(--warning)"></div></div>
-        </div>
-        <div class="pbar-row">
-          <div class="pbar-label"><span>Recall — Câncer (classe 1) ⚠️ crítico</span><span style="color:var(--warning)">36%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:36%;background:var(--warning)"></div></div>
-        </div>
-        <div class="pbar-row" style="margin-bottom:0;">
-          <div class="pbar-label"><span>AUROC</span><span style="color:var(--info)">73,7%</span></div>
-          <div class="pbar"><div class="pbar-fill" style="width:73.7%;background:var(--info)"></div></div>
-        </div>
+      <div class="chart-wrap" style="margin-bottom:0;">
+        <h3>Métricas Detalhadas</h3>
+        <div class="pbar-row"><div class="pbar-label"><span>Acurácia Global</span><span>91%</span></div><div class="pbar"><div class="pbar-fill" style="width:91%;background:#047857"></div></div></div>
+        <div class="pbar-row"><div class="pbar-label"><span>Recall — Saudável</span><span>94%</span></div><div class="pbar"><div class="pbar-fill" style="width:94%;background:#047857"></div></div></div>
+        <div class="pbar-row"><div class="pbar-label"><span>Precisão — Saudável</span><span>96%</span></div><div class="pbar"><div class="pbar-fill" style="width:96%;background:#059669"></div></div></div>
+        <div class="pbar-row"><div class="pbar-label"><span>Precisão — Câncer</span><span>31%</span></div><div class="pbar"><div class="pbar-fill" style="width:31%;background:#d97706"></div></div></div>
+        <div class="pbar-row"><div class="pbar-label"><span>Recall — Câncer ⚠️</span><span>36%</span></div><div class="pbar"><div class="pbar-fill" style="width:36%;background:#d97706"></div></div></div>
+        <div class="pbar-row" style="margin-bottom:0;"><div class="pbar-label"><span>AUROC</span><span>73,7%</span></div><div class="pbar"><div class="pbar-fill" style="width:73.7%;background:#2563eb"></div></div></div>
       </div>
     </div>
 
-    <!-- ─── MODELO 3 ─── -->
+    <!-- Modelo 3 -->
     <div class="model-card alt">
       <div class="model-header">
         <div class="model-title">Modelo 3 — Árvore de Decisão (sem SMOTE)</div>
         <div class="model-tags">
           <span class="badge purple">DecisionTreeClassifier</span>
           <span class="badge red">sem SMOTE</span>
-          <span class="badge yellow">Interpretável</span>
-          <span class="badge blue">max_depth=4</span>
+          <span class="badge yellow">Interpretável · max_depth=4</span>
         </div>
       </div>
       <p class="model-desc">
-        Experimentos mostraram que a Árvore de Decisão funciona melhor <strong>sem SMOTE</strong>
-        — o oversampling foi testado e removido (linha comentada no notebook). Os parâmetros foram
-        definidos manualmente após análise de overfitting. O ajuste de threshold também não trouxe
-        ganho neste modelo (padrão 0,50 mantido).
+        SMOTE foi testado e removido — piorou os resultados. Parâmetros definidos manualmente
+        após análise de overfitting. Threshold padrão 0,50 mantido.
       </p>
-
-<pre><code><span class="kw">from</span> sklearn.tree <span class="kw">import</span> DecisionTreeClassifier
-
-<span class="cm"># SMOTE testado e removido — piora os resultados neste modelo</span>
-<span class="cm"># ('smote', SMOTE(random_state=42)),  # comentado no notebook</span>
-
-<span class="cl">DecisionTreeClassifier</span>(
-    class_weight={<span class="nm">0</span>: <span class="nm">1</span>, <span class="nm">1</span>: <span class="nm">10</span>},  <span class="cm"># penaliza 10× erros na classe positiva</span>
-    max_depth=<span class="nm">4</span>,                  <span class="cm"># profundidade máxima — evita overfitting</span>
-    min_samples_leaf=<span class="nm">5</span>,           <span class="cm"># no mínimo 5 amostras por folha</span>
+<pre><code><span class="cl">DecisionTreeClassifier</span>(
+    class_weight={<span class="nm">0</span>:<span class="nm">1</span>, <span class="nm">1</span>:<span class="nm">10</span>},
+    max_depth=<span class="nm">4</span>, min_samples_leaf=<span class="nm">5</span>,
     random_state=<span class="nm">42</span>
-)
-
-<span class="cm"># Threshold padrão = 0.50 mantido — ajuste não trouxe melhoria neste modelo</span>
-<span class="cm"># threshold = 0.5</span>
-<span class="cm"># y_pred = (y_proba > threshold).astype(int)</span></code></pre>
-
+)</code></pre>
       <div class="metric-grid">
-        <div class="metric-cell">
-          <div class="m-label">Acurácia Geral</div>
-          <div class="m-val" style="color:var(--danger)">88%</div>
-          <div class="m-class">172 amostras de teste</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Precisão (Câncer)</div>
-          <div class="m-val" style="color:var(--danger)">22%</div>
-          <div class="m-class">Das predições positivas</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">Recall (Câncer)</div>
-          <div class="m-val" style="color:var(--warning)">36%</div>
-          <div class="m-class">Igual ao RF+SMOTE</div>
-        </div>
-        <div class="metric-cell">
-          <div class="m-label">AUROC</div>
-          <div class="m-val" style="color:var(--danger)">0,624</div>
-          <div class="m-class">Resultado fraco</div>
-        </div>
+        <div class="metric-cell"><div class="m-label">Acurácia</div><div class="m-val" style="color:#dc2626">88%</div><div class="m-class">172 amostras</div></div>
+        <div class="metric-cell"><div class="m-label">Precisão</div><div class="m-val" style="color:#dc2626">22%</div><div class="m-class">câncer</div></div>
+        <div class="metric-cell"><div class="m-label">Recall</div><div class="m-val" style="color:#d97706">36%</div><div class="m-class">igual ao M2</div></div>
+        <div class="metric-cell"><div class="m-label">AUROC</div><div class="m-val" style="color:#dc2626">0,624</div><div class="m-class">resultado fraco</div></div>
       </div>
-
-      <div class="callout warn" style="margin-bottom:0;">
+      <div class="callout info" style="margin-bottom:0;">
         <div class="callout-icon">🌿</div>
-        <div class="callout-body">
-          Apesar do AUROC inferior (0,624), a Árvore de Decisão tem vantagem em
-          <strong>interpretabilidade</strong> — é possível visualizar as regras de decisão
-          em forma de grafo. Pode ser preferível em contextos clínicos que exijam explicabilidade.
-        </div>
+        <div class="callout-body">Apesar do AUROC inferior, a Árvore de Decisão é totalmente interpretável — pode ser preferível em contextos clínicos que exijam explicabilidade.</div>
       </div>
     </div>
 
-    <!-- ─── Comparativo Visual ─── -->
-    <h3 style="margin:8px 0 20px; font-size:1.15rem; font-weight:800;">Comparativo Visual — Métricas por Modelo</h3>
+    <h3 style="margin:24px 0 16px; font-size:1rem; font-weight:700;">Comparativo Visual</h3>
 
     <div class="chart-wrap">
       <h3>Precisão, Recall e F1 — Classe Positiva (Câncer)</h3>
@@ -934,7 +734,7 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
 
     <div class="chart-row">
       <div class="chart-wrap">
-        <h3>Classification Report — RF Baseline vs RF+SMOTE+0.41</h3>
+        <h3>Classification Report — Baseline vs Melhor Modelo</h3>
         <canvas id="chartBaseline" height="200"></canvas>
       </div>
       <div class="chart-wrap">
@@ -946,59 +746,37 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
     <div class="callout bad">
       <div class="callout-icon">🔴</div>
       <div class="callout-body">
-        <strong>Por que o Recall ainda é baixo mesmo com SMOTE?</strong>
-        O SMOTE gera exemplos sintéticos no espaço de features, mas não adiciona informação real.
-        Com apenas 55 casos positivos reais (11 no conjunto de teste), o limite estrutural do dataset
-        não pode ser superado apenas com técnicas de balanceamento. O pré-processamento melhorou a
-        importância relativa das features engineered, porém o dataset não possui poder preditivo
-        suficiente para uso clínico.
+        <strong>Por que o Recall ainda é baixo?</strong>
+        Com apenas 55 positivos reais (11 no teste), o SMOTE não adiciona informação real — gera sintéticos.
+        O dataset não possui poder preditivo suficiente para uso clínico.
       </div>
     </div>
   </div>
 
-  <!-- ═══════════ SEÇÃO 5 — DISCUSSÃO ═══════════ -->
+  <!-- ══ SEÇÃO 5 ══ -->
   <div class="section" id="s5">
     <div class="section-header">
       <div class="section-num">5</div>
       <h2>Discussão e Conclusões</h2>
     </div>
 
-    <h3 style="margin-bottom:12px; font-size:1.05rem;">5.1 — Análise Exploratória</h3>
-    <div class="callout info" style="margin-bottom:24px;">
-      <div class="callout-icon">📈</div>
-      <div class="callout-body">
-        Dataset com pacientes jovens (média 26,8 anos), baixa prevalência de DSTs (10,5%) e tabagismo (14,6%).
-        Mais da metade usa contraceptivos hormonais (64,1%). O desbalanceamento extremo das classes
-        (6% positivos) foi o principal desafio. Nenhum atributo isolado apresentou correlação forte
-        com a Biópsia — confirmando a natureza não linear do problema.
-      </div>
-    </div>
+    <p class="section-intro">
+      Mesmo com SMOTE, ajuste de threshold, GridSearchCV e feature engineering, o melhor AUROC foi 0,737
+      e o melhor Recall foi 36%. Os resultados são academicamente válidos, mas insuficientes para produção clínica.
+    </p>
 
-    <h3 style="margin-bottom:12px; font-size:1.05rem;">5.2 — Estratégias de Pré-processamento</h3>
-    <div class="callout ok" style="margin-bottom:24px;">
-      <div class="callout-icon">⚙️</div>
-      <div class="callout-body">
-        A imputação por média combinada com Missing Indicators preservou a informação de não-resposta.
-        O agrupamento de indicadores idênticos reduziu dimensionalidade sem perda de informação.
-        A engenharia de features (<code>smoke_year_packs</code>, <code>contraceptive_exposure</code>,
-        <code>sexual_risk</code>) criou representações mais ricas, com ganho confirmado pela importância
-        de features do Random Forest.
-      </div>
-    </div>
-
-    <h3 style="margin-bottom:14px; font-size:1.05rem;">5.3 — Comparativo Final dos Modelos</h3>
-    <div class="tbl-wrap" style="margin-bottom:24px;">
+    <div class="tbl-wrap">
       <table>
         <thead>
-          <tr><th>Modelo</th><th>Precisão (câncer)</th><th>Recall (câncer)</th><th>F1 (câncer)</th><th>Acurácia</th><th>AUROC</th><th>Veredicto</th></tr>
+          <tr><th>Modelo</th><th>Precisão</th><th>Recall</th><th>F1</th><th>Acurácia</th><th>AUROC</th><th>Veredicto</th></tr>
         </thead>
         <tbody>
           <tr>
             <td>RF Baseline (GridSearchCV)</td>
             <td>50%</td><td>9%</td><td>0,15</td><td>94%</td><td>—</td>
-            <td><span class="badge yellow">⚠️ Recall insuficiente</span></td>
+            <td><span class="badge yellow">Recall insuficiente</span></td>
           </tr>
-          <tr style="background:var(--success-light)">
+          <tr style="background:#f0fdf4;">
             <td><strong>RF + SMOTE + Threshold 0.41</strong></td>
             <td><strong>31%</strong></td><td><strong>36%</strong></td><td><strong>0,33</strong></td>
             <td><strong>91%</strong></td><td><strong>0,737</strong></td>
@@ -1007,47 +785,34 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
           <tr>
             <td>Árvore de Decisão (sem SMOTE)</td>
             <td>22%</td><td>36%</td><td>0,28</td><td>88%</td><td>0,624</td>
-            <td><span class="badge red">❌ AUROC fraco</span></td>
+            <td><span class="badge red">AUROC fraco</span></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <h3 style="margin-bottom:12px; font-size:1.05rem;">5.4 — Limitações</h3>
-    <div class="callout warn" style="margin-bottom:18px;">
+    <div class="callout warn">
       <div class="callout-icon">🚧</div>
       <div class="callout-body">
-        <strong>Limitações Identificadas</strong>
-        <ul style="margin-top:8px;padding-left:18px;line-height:2;">
-          <li>Dataset pequeno: 858 registros com apenas 55 positivos limita o aprendizado;</li>
-          <li>SMOTE não é bem visto pela comunidade médica — gera amostras sintéticas, não dados reais;</li>
-          <li>Recall de 36% ainda é inadequado para triagem clínica real (falsos negativos = vidas em risco);</li>
-          <li>Alta taxa de dados faltantes (&gt;91%) nas variáveis temporais de DST reduz seu poder preditivo;</li>
-          <li>Correlações fracas entre features e target — baixo poder preditivo intrínseco do dataset.</li>
+        <strong>Limitações</strong>
+        <ul style="margin-top:6px; padding-left:16px; line-height:2;">
+          <li>Dataset pequeno (858 registros, 55 positivos) limita o aprendizado;</li>
+          <li>SMOTE gera amostras sintéticas — não é bem visto para validação clínica;</li>
+          <li>Recall de 36% é inadequado para triagem real (falsos negativos = risco de vida);</li>
+          <li>Correlações fracas entre features e target — baixo poder preditivo intrínseco.</li>
         </ul>
-      </div>
-    </div>
-
-    <div class="callout bad" style="margin-bottom:18px;">
-      <div class="callout-icon">⚠️</div>
-      <div class="callout-body">
-        <strong>Conclusão: Dataset sem poder preditivo suficiente para uso clínico</strong>
-        Mesmo com técnicas avançadas (SMOTE, ajuste de threshold, GridSearchCV, feature engineering),
-        o melhor AUROC obtido foi 0,737 e o melhor Recall foi 36%. Os resultados são academicamente
-        válidos e demonstram domínio das técnicas, mas não devem ser usados em produção clínica.
       </div>
     </div>
 
     <div class="callout ok">
       <div class="callout-icon">💡</div>
       <div class="callout-body">
-        <strong>O que melhoraria os resultados em um cenário real?</strong>
-        <ul style="margin-top:8px;padding-left:18px;line-height:2;">
-          <li><strong>Mais dados reais</strong>: coletar mais casos positivos confirmados (&gt;500 casos);</li>
-          <li><strong>XGBoost / LightGBM</strong>: modelos de boosting tendem a superar RF em datasets pequenos e desbalanceados;</li>
-          <li><strong>Curva Precisão-Recall</strong>: mais informativa que AUROC para classes muito desbalanceadas;</li>
-          <li><strong>K-Fold estratificado (k=10)</strong>: estimativas mais confiáveis com poucos dados;</li>
-          <li><strong>Dados externos</strong>: integrar datasets de outros hospitais para ampliar os casos positivos.</li>
+        <strong>O que melhoraria os resultados</strong>
+        <ul style="margin-top:6px; padding-left:16px; line-height:2;">
+          <li><strong>Mais dados reais</strong> — coletar &gt;500 casos positivos confirmados;</li>
+          <li><strong>XGBoost / LightGBM</strong> — boosting supera RF em datasets pequenos e desbalanceados;</li>
+          <li><strong>Curva Precisão-Recall</strong> — mais informativa que AUROC para classes muito raras;</li>
+          <li><strong>K-Fold estratificado (k=10)</strong> — estimativas mais confiáveis com poucos dados.</li>
         </ul>
       </div>
     </div>
@@ -1058,8 +823,7 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
 <footer>
   <strong>Predição de Risco — Câncer do Colo do Útero</strong><br>
   FIAP — Pós-Graduação IA Para Desenvolvedores · Tech Challenge Fase 1<br>
-  Dataset: UCI Machine Learning Repository — Hospital Universitário de Caracas, Venezuela<br>
-  Python · Pandas · NumPy · Scikit-learn · imbalanced-learn · Matplotlib · Seaborn · Streamlit
+  Dataset: UCI Machine Learning Repository — Hospital Universitário de Caracas, Venezuela
   <div class="footer-team">
     Jefferson Antônio Pantoja Silva &nbsp;·&nbsp; Wilson Lima da Silva &nbsp;·&nbsp;
     Gustavo Lopes da Silva &nbsp;·&nbsp; Felipe Soeiro Lopes &nbsp;·&nbsp; Vinicius Tavares Sousa da Silva
@@ -1068,26 +832,25 @@ y_pred   = (y_proba > threshold).astype(<span class="nb">int</span>)</code></pre
 
 <script>
 const p = {
-  roxo:    '#6d28d9',
-  rosa:    '#db2777',
-  verde:   '#059669',
+  roxo:    '#5b21b6',
+  rosa:    '#be185d',
+  verde:   '#047857',
   laranja: '#d97706',
-  azul:    '#0284c7',
+  azul:    '#1d4ed8',
   vermelho:'#dc2626',
-  cinza:   '#94a3b8',
-  verde2:  '#34d399',
+  cinza:   '#9ca3af',
+  verde2:  '#059669',
 };
 
-// ── Targets ──
 new Chart(document.getElementById('chartTargets'), {
   type: 'bar',
   data: {
-    labels: ['Hinselmann','Schiller','Citologia','Biopsia (target principal)'],
+    labels: ['Hinselmann','Schiller','Citologia','Biopsia'],
     datasets: [
-      { label: 'Positivos (%)', data: [4.1, 8.6, 5.1, 6],
-        backgroundColor: [p.azul, p.laranja, p.roxo, p.rosa], borderRadius: 8 },
-      { label: 'Negativos (%)', data: [95.9, 91.4, 94.9, 94],
-        backgroundColor: ['#dbeafe','#fef3c7','#ede9fe','#fce7f3'], borderRadius: 8 }
+      { label: 'Positivos (%)', data: [4.1, 8.6, 5.1, 6.4],
+        backgroundColor: [p.azul, p.laranja, p.roxo, p.rosa], borderRadius: 6 },
+      { label: 'Negativos (%)', data: [95.9, 91.4, 94.9, 93.6],
+        backgroundColor: ['#dbeafe','#fef3c7','#ede9fe','#fce7f3'], borderRadius: 6 }
     ]
   },
   options: {
@@ -1097,59 +860,20 @@ new Chart(document.getElementById('chartTargets'), {
   }
 });
 
-// ── Idade ──
 new Chart(document.getElementById('chartIdade'), {
   type: 'bar',
   data: {
-    labels: ['13–17','18–22','23–27','28–32','33–37','38–42','43–47','48–52','53+'],
-    datasets: [{ label: 'Nº de Pacientes',
-      data: [52, 210, 218, 150, 95, 60, 35, 20, 18],
-      backgroundColor: p.roxo, borderRadius: 6 }]
+    labels: ['13–17','18–22','23–27','28–32','33–37','38–42','43+'],
+    datasets: [{ label: 'Nº de Pacientes', data: [52, 210, 218, 150, 95, 60, 73],
+      backgroundColor: p.roxo, borderRadius: 5 }]
   },
   options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
 });
 
-// ── Parceiros ──
-new Chart(document.getElementById('chartParceiros'), {
-  type: 'bar',
-  data: {
-    labels: ['1','2','3','4','5','6+'],
-    datasets: [{ label: 'Proporção (%)',
-      data: [28, 32, 20, 10, 5, 5],
-      backgroundColor: [p.azul, p.roxo, p.rosa, p.laranja, p.vermelho, p.cinza], borderRadius: 6 }]
-  },
-  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
-});
-
-// ── Missing ──
-new Chart(document.getElementById('chartMissing'), {
-  type: 'bar',
-  data: {
-    labels: [
-      'Tempo 1º diagnóst. DST','Tempo últ. diagnóst. DST','DIU','DIU (anos)',
-      'Contrac. Hormonal','Contrac. Hormonal (anos)','Gestações',
-      'Parceiros Sexuais','Fumo','Prim. relação sexual'
-    ],
-    datasets: [{ label: '% Faltante',
-      data: [91.7, 91.7, 13.6, 13.6, 12.6, 12.6, 6.5, 3.0, 1.5, 0.8],
-      backgroundColor: ctx => {
-        const v = ctx.raw;
-        return v > 50 ? p.vermelho : v > 10 ? p.laranja : p.azul;
-      },
-      borderRadius: 6 }]
-  },
-  options: {
-    indexAxis: 'y', responsive: true,
-    plugins: { legend: { display: false } },
-    scales: { x: { max: 100, ticks: { callback: v => v + '%' } } }
-  }
-});
-
-// ── Biópsia ──
 new Chart(document.getElementById('chartBiopsia'), {
   type: 'doughnut',
   data: {
-    labels: ['Saudável (94%)', 'Câncer (6%)'],
+    labels: ['Saudável — 803 (93,6%)', 'Câncer — 55 (6,4%)'],
     datasets: [{ data: [803, 55],
       backgroundColor: [p.verde, p.vermelho],
       borderColor: '#fff', borderWidth: 3 }]
@@ -1158,105 +882,148 @@ new Chart(document.getElementById('chartBiopsia'), {
     responsive: true,
     plugins: {
       legend: { position: 'bottom' },
-      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} pacientes` } }
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}` } }
     }
   }
 });
 
-// ── DSTs ──
+new Chart(document.getElementById('chartParceiros'), {
+  type: 'bar',
+  data: {
+    labels: ['1','2','3','4','5','6+'],
+    datasets: [{ data: [28, 32, 20, 10, 5, 5],
+      backgroundColor: [p.azul, p.roxo, p.rosa, p.laranja, p.vermelho, p.cinza], borderRadius: 5 }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => v + '%' } } } }
+});
+
+new Chart(document.getElementById('chartMissing'), {
+  type: 'bar',
+  data: {
+    labels: ['Tempo 1º diag. DST','Tempo últ. diag. DST','DIU','DIU (anos)','Contrac. Horm.','Contrac. Horm. (anos)','Gestações','Parceiros','Fumo','1ª relação'],
+    datasets: [{ data: [91.7, 91.7, 13.6, 13.6, 12.6, 12.6, 6.5, 3.0, 1.5, 0.8],
+      backgroundColor: ctx => ctx.raw > 50 ? p.vermelho : ctx.raw > 10 ? p.laranja : p.azul,
+      borderRadius: 5 }]
+  },
+  options: { indexAxis: 'y', responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { x: { max: 100, ticks: { callback: v => v + '%' } } } }
+});
+
 new Chart(document.getElementById('chartDSTs'), {
   type: 'bar',
   data: {
-    labels: ['Condiloma\nvulvo-perineal','Condiloma\nvaginal','Sífilis','HIV','Herpes Genital','HPV','Hep. B','DST (qualquer)'],
-    datasets: [{ label: '% de Pacientes',
-      data: [5.7, 0.5, 2.4, 2.4, 0.1, 0.3, 0.1, 10.5],
-      backgroundColor: p.vermelho, borderRadius: 6 }]
+    labels: ['Condiloma vulvo-per.','Condiloma vaginal','Sífilis','HIV','Herpes Genital','HPV','Hepatite B','DST (qualquer)'],
+    datasets: [{ data: [5.7, 0.5, 2.4, 2.4, 0.1, 0.3, 0.1, 10.5],
+      backgroundColor: p.vermelho, borderRadius: 5 }]
   },
-  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => v + '%' } } } }
+  options: { responsive: true, plugins: { legend: { display: false } },
+    scales: { y: { ticks: { callback: v => v + '%' } } } }
 });
 
-// ── Missing Groups ──
 new Chart(document.getElementById('chartMissingGroups'), {
   type: 'bar',
   data: {
-    labels: ['DSTs\n(87,8%)', 'Contrac. Horm.\n(87,4%)', 'DIU\n(86,4%)', 'Gestações\n(93,5%)', 'Fumo\n(98,5%)', 'Tempo Diag.\n(8,3%)'],
+    labels: ['DSTs','Contrac. Horm.','DIU','Gestações','Fumo','Tempo Diag.'],
     datasets: [
-      { label: '% Responderam',     data: [87.8, 87.4, 86.4, 93.5, 98.5, 8.3],  backgroundColor: p.verde,    borderRadius: 6 },
-      { label: '% Não Responderam', data: [12.2, 12.6, 13.6, 6.5,  1.5,  91.7], backgroundColor: p.vermelho, borderRadius: 6 }
+      { label: '% Responderam',     data: [87.8, 87.4, 86.4, 93.5, 98.5, 8.3],  backgroundColor: p.verde,    borderRadius: 5 },
+      { label: '% Não Responderam', data: [12.2, 12.6, 13.6, 6.5,  1.5,  91.7], backgroundColor: p.vermelho, borderRadius: 5 }
     ]
   },
-  options: {
-    responsive: true,
+  options: { responsive: true,
     scales: { x: { stacked: true }, y: { stacked: true, max: 100, ticks: { callback: v => v + '%' } } },
-    plugins: { legend: { position: 'top' } }
-  }
+    plugins: { legend: { position: 'top' } } }
 });
 
-// ── Comparativo ──
 new Chart(document.getElementById('chartComparativo'), {
   type: 'bar',
   data: {
-    labels: [
-      'RF Baseline (GridSearchCV)',
-      'RF + SMOTE + Threshold 0.41',
-      'Árvore de Decisão (sem SMOTE)'
-    ],
+    labels: ['RF Baseline','RF + SMOTE + 0.41','Árvore de Decisão'],
     datasets: [
-      { label: 'Precisão (câncer)', data: [0.50, 0.31, 0.22], backgroundColor: p.azul,     borderRadius: 6 },
-      { label: 'Recall (câncer)',   data: [0.09, 0.36, 0.36], backgroundColor: p.vermelho,  borderRadius: 6 },
-      { label: 'F1 (câncer)',       data: [0.15, 0.33, 0.28], backgroundColor: p.roxo,      borderRadius: 6 }
+      { label: 'Precisão', data: [0.50, 0.31, 0.22], backgroundColor: p.azul,    borderRadius: 5 },
+      { label: 'Recall',   data: [0.09, 0.36, 0.36], backgroundColor: p.vermelho, borderRadius: 5 },
+      { label: 'F1',       data: [0.15, 0.33, 0.28], backgroundColor: p.roxo,    borderRadius: 5 }
     ]
   },
-  options: {
-    responsive: true,
+  options: { responsive: true,
     scales: { y: { min: 0, max: 0.6, ticks: { callback: v => (v*100).toFixed(0) + '%' } } },
-    plugins: { legend: { position: 'top' } }
-  }
+    plugins: { legend: { position: 'top' } } }
 });
 
-// ── Baseline detail ──
 new Chart(document.getElementById('chartBaseline'), {
   type: 'bar',
   data: {
     labels: ['Precisão','Recall','F1-Score'],
     datasets: [
-      { label: 'RF Baseline — Saudável',        data: [0.94, 0.99, 0.97], backgroundColor: p.verde,    borderRadius: 6 },
-      { label: 'RF Baseline — Biopsia +',        data: [0.50, 0.09, 0.15], backgroundColor: p.vermelho, borderRadius: 6 },
-      { label: 'RF+SMOTE+0.41 — Saudável',       data: [0.96, 0.94, 0.95], backgroundColor: p.verde2,   borderRadius: 6 },
-      { label: 'RF+SMOTE+0.41 — Biopsia +',      data: [0.31, 0.36, 0.33], backgroundColor: p.laranja,  borderRadius: 6 }
+      { label: 'RF Baseline — Saudável',   data: [0.94, 0.99, 0.97], backgroundColor: p.verde,    borderRadius: 5 },
+      { label: 'RF Baseline — Câncer',     data: [0.50, 0.09, 0.15], backgroundColor: p.vermelho, borderRadius: 5 },
+      { label: 'RF+SMOTE+0.41 — Saudável', data: [0.96, 0.94, 0.95], backgroundColor: p.verde2,   borderRadius: 5 },
+      { label: 'RF+SMOTE+0.41 — Câncer',   data: [0.31, 0.36, 0.33], backgroundColor: p.laranja,  borderRadius: 5 }
     ]
   },
-  options: {
-    responsive: true,
+  options: { responsive: true,
     scales: { y: { min: 0, max: 1, ticks: { callback: v => (v*100).toFixed(0) + '%' } } },
-    plugins: { legend: { position: 'top' } }
-  }
+    plugins: { legend: { position: 'top' } } }
 });
 
-// ── AUROC ──
 new Chart(document.getElementById('chartAuroc'), {
   type: 'bar',
   data: {
-    labels: [
-      'RF Baseline (GridSearchCV)',
-      'RF + SMOTE + Threshold 0.41',
-      'Árvore de Decisão (sem SMOTE)'
-    ],
-    datasets: [{
-      label: 'AUROC',
-      data: [null, 0.737, 0.624],
-      backgroundColor: [p.cinza, p.verde, p.vermelho],
-      borderRadius: 8
-    }]
+    labels: ['RF Baseline','RF + SMOTE + 0.41','Árvore de Decisão'],
+    datasets: [{ data: [null, 0.737, 0.624],
+      backgroundColor: [p.cinza, p.verde, p.vermelho], borderRadius: 6 }]
   },
-  options: {
-    responsive: true,
+  options: { responsive: true,
     scales: { y: { min: 0, max: 1, ticks: { callback: v => v.toFixed(2) } } },
-    plugins: {
-      legend: { display: false },
-      tooltip: { callbacks: { label: ctx => ctx.raw ? ' AUROC: ' + ctx.raw.toFixed(3) : ' Não avaliado' } }
-    }
-  }
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ctx.raw ? ' AUROC: ' + ctx.raw.toFixed(3) : ' Não avaliado' } } } }
+});
+
+// ── Scroll progress + Back to top ──
+const scrollBar = document.getElementById('scroll-progress');
+const topBtn    = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  if (total > 0) scrollBar.style.transform = `scaleX(${window.scrollY / total})`;
+  topBtn.classList.toggle('visible', window.scrollY > 500);
+}, { passive: true });
+topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ── Collapsible model cards ──
+document.querySelectorAll('.model-card').forEach(card => {
+  const header = card.querySelector('.model-header');
+  const isBest = card.classList.contains('best');
+
+  const body = document.createElement('div');
+  body.className = 'model-body' + (isBest ? ' open' : '');
+  while (card.children.length > 1) body.appendChild(card.children[1]);
+  card.appendChild(body);
+
+  const left = document.createElement('div');
+  left.className = 'model-header-left';
+  while (header.children.length > 0) left.appendChild(header.children[0]);
+  header.appendChild(left);
+
+  const hint = document.createElement('div');
+  hint.className = 'model-collapse-hint';
+  hint.textContent = isBest ? 'clique para recolher' : 'clique para expandir';
+  left.appendChild(hint);
+
+  const icon = document.createElement('span');
+  icon.className = 'accordion-icon' + (isBest ? ' open' : '');
+  icon.textContent = '▼';
+  header.appendChild(icon);
+
+  body.style.maxHeight = isBest ? '5000px' : '0px';
+
+  header.addEventListener('click', () => {
+    const isOpen = body.classList.contains('open');
+    body.classList.toggle('open', !isOpen);
+    body.style.maxHeight = isOpen ? '0px' : '5000px';
+    icon.classList.toggle('open', !isOpen);
+    hint.textContent = isOpen ? 'clique para expandir' : 'clique para recolher';
+  });
 });
 </script>
 </body>
