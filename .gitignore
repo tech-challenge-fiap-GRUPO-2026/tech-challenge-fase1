@@ -1,3 +1,6 @@
+# Modelos serializados
+model/*
+
 # Bytecode Python
 __pycache__/
 *.pyc
