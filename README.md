@@ -197,8 +197,10 @@ tech-challenge-fase1/
 │   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                            # Ponto de entrada da aplicação Streamlit
+│   ├── api.py                             # Ponto de entrada da aplicação que realiza o treinamento do modelo
+|   ├── training.py                        # Ponto de entrada da aplicação que representa a API que usa o modelo
 │   └── src/
+|       ├── constants.py                   # Contém as constantes compartilhadas e utilizadas pelo treinamento e a API
 │       ├── data.py                        # Carregamento e tratamento do dataset
 │       ├── pipeline_functions.py          # Funções de pré-processamento do pipeline
 │       ├── streamlit_helper.py            # Componentes de UI (Streamlit)
@@ -206,8 +208,8 @@ tech-challenge-fase1/
 ├── Dockerfile                             # Imagem Docker da aplicação
 ├── docker-compose.yml                     # Orquestração dos containers
 ├── requirements.txt                       # Dependências Python
-├── run_app.sh                             # Script de execução (Linux/Mac)
-├── run_app.cmd                            # Script de execução (Windows)
+├── run_api.sh                             # Script de execução da API
+├── run_training.sh                        # Script de execução da Rotina de Treinamento e Deploy do Modelo
 └── README.md                              # Este arquivo
 └── relatorio_cancer_cervical.html         # Relatório visual interativo com gráficos
 ```
@@ -255,7 +257,6 @@ jupyter notebook notebooks/init_cervical_cancer.ipynb
 Ou, se preferir JupyterLab:
 
 ```bash
-pip install jupyterlab
 jupyter lab notebooks/init_cervical_cancer.ipynb
 ```
 
@@ -271,12 +272,11 @@ No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline 
 # Realizar o treinamento do modelo e o deploy no diretório model
 ./run_training.sh
 
-# Windows
+# Subir a aplicação da API com o Modelo
 ./run_api.sh
 ```
 
 **Via Docker (recomendado):**
-
 
 
 ```bash
