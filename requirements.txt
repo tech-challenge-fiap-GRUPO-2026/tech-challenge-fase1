@@ -1,3 +1,4 @@
+fastapi
 imbalanced-learn
 matplotlib
 numpy
@@ -6,3 +7,4 @@ scikit-learn
 scipy
 seaborn
 streamlit
+uvicorn[standard]

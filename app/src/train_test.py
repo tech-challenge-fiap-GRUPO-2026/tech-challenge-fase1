@@ -1,18 +1,21 @@
 
+import os
+import pickle
+
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report
 from imblearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.tree import DecisionTreeClassifier
-from imblearn.over_sampling import SMOTE
-# from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
+from app.src.constants import (
+    MODEL_FILE,
+    X_TEST_FILE,
+    Y_TEST_FILE
+)
 from app.src.pipeline_functions import (
     agrupar_colunas_preenchido,
     criar_atributos_estrategicos,
-    # discretizar_demograficos_comportamentais,
     reduzir_redundancia_smokes,
     remover_colunas_sem_variacao,
     remover_coluna_std_tempo,
@@ -31,17 +34,19 @@ class ModelTestTraining(object):
         target_column,
         random_state,
         test_size,
+        deploy_dir_path
     ):
-        self.ui_helper = StreamlitHelper()
         self.dataset = dataset
         self.target_column = target_column
         self.random_state = random_state
         self.test_size = test_size
+        self.deploy_dir_path = deploy_dir_path
         self.pipeline = self.__build_pipeline()
         self.X = dataset.copy().drop(columns=[target_column])
         self.y = dataset.copy()[target_column]
 
     def __build_pipeline(self):
+        print('Criando o Pipeline ...')
         pipeline = Pipeline([
             ('remover', FunctionTransformer(remover_colunas_sem_variacao)),
             ('faltantes', FunctionTransformer(tratar_missing_com_indicador)),
@@ -59,11 +64,29 @@ class ModelTestTraining(object):
             ))
         ])
         return pipeline
-    
-    def train_test(self):
-        self.ui_helper.display_header('Treinamento e Teste do Modelo')
-        self.ui_helper.display_divider()
 
+    def __deploy(self, X_test, y_test):
+        print('Iniciando o Deploy do modelo ...')
+        with open(
+            os.path.join(self.deploy_dir_path, MODEL_FILE),
+            'wb'
+        ) as f:
+            pickle.dump(self.pipeline, f)
+        print('Iniciando o Deploy dos dados de Teste de X ...')
+        with open(
+            os.path.join(self.deploy_dir_path, X_TEST_FILE),
+            'wb'
+        ) as f:
+            pickle.dump(X_test, f)
+        print('Iniciando o Deploy dos dados de Teste de y ...')
+        with open(
+            os.path.join(self.deploy_dir_path, Y_TEST_FILE),
+            'wb'
+        ) as f:
+            pickle.dump(y_test, f)
+    
+    def train_test(self, deploy=True):
+        print('Separando os dados de treino e testes do modelo ...')
         X_train, X_test, y_train, y_test = train_test_split(
             self.X,
             self.y,
@@ -71,39 +94,15 @@ class ModelTestTraining(object):
             stratify=self.y, 
             random_state=self.random_state
         )
-
-        self.ui_helper.display_markdown(
-            f'**Valor do Random State:** {self.random_state} '
-        )
-        self.ui_helper.display_markdown(
-            f'**Porcentagem utilizada para testes:** {"{:.2f}%".format(self.test_size * 100)} '
-        )
-        self.ui_helper.display_markdown(
-            f'**Tamanho do conjunto de treinamento:** {len(X_train)} amostras'
-        )
-        self.ui_helper.display_markdown(
-            f'**Tamanho do conjunto de teste:** {len(X_test)} amostras'
-        )
-        self.ui_helper.display_divider()
-
-        self.ui_helper.display_markdown("Dados de Treinamento:")
-        self.ui_helper.display_dataframe(X_train)
-
-        self.ui_helper.display_markdown("Dados de Teste:")
-        self.ui_helper.display_dataframe(X_test)
-
-        self.ui_helper.display_divider()
-        self.ui_helper.display_subheader("Etapas do Pipeline:")
-        self.ui_helper.display_json(self.pipeline.named_steps)
-        self.ui_helper.display_divider()
-
+        print('Iniciando o Treinamento do modelo ...')
         self.pipeline.fit(
             X_train,
             y_train
         )
-
+        print('Iniciando o Teste do modelo ...')
         y_pred = self.pipeline.predict(X_test)
         report = classification_report(y_test, y_pred)
-
-        self.ui_helper.display_subheader("Relatório de Classificação:")
-        self.ui_helper.display_code(report, wrap_lines=True)
+        print(report)
+        if deploy:
+            self.__deploy(X_test, y_test)
+        

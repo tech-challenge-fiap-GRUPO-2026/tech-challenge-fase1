@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-
-from app.src.data import LoadData
-from app.src.streamlit_helper import StreamlitHelper
-from app.src.train_test import ModelTestTraining    
-
 import os
+
+from app.src.constants import MODEL_DIR
+from app.src.data import LoadData
+from app.src.train_test import ModelTestTraining    
 
 
 DATA = [
@@ -41,23 +40,18 @@ def get_data_path():
 
 
 if __name__ == '__main__':
-    ui_helper = StreamlitHelper()
-    ui_helper.display_title('Cervical Cancer Risk Factors Dataset')
-    ui_helper.display_divider()
-
     data_path = get_data_path()
     load_data = LoadData(
         path=data_path,
         targets=TARGETS,
         cols_remove=COLS_REMOVE
     )
-    
     df = load_data.get_dataset_treated()
-    
     model_test_training = ModelTestTraining(
         dataset=df,
         target_column='Biopsy',
         random_state=42,
-        test_size=0.2
+        test_size=0.2,
+        deploy_dir_path=MODEL_DIR
     )
     model_test_training.train_test()

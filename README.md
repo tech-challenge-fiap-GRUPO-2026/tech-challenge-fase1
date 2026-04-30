@@ -263,25 +263,36 @@ jupyter lab notebooks/init_cervical_cancer.ipynb
 
 No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline completo do início ao fim.
 
-### 6. 🖥️ Executar a aplicação Streamlit
+### 6. 🖥️ Executar a aplicação com API e Modelo Treinado
 
-**Via script (recomendado):**
+**Via script no Linux :**
 
 ```bash
-# Linux / Mac
-bash run_app.sh
+# Realizar o treinamento do modelo e o deploy no diretório model
+./run_training.sh
 
 # Windows
-run_app.cmd
+./run_api.sh
 ```
 
-**Via Docker:**
+**Via Docker (recomendado):**
+
+
 
 ```bash
-docker-compose up --build
+# Gerar a imagem da API com o Modelo Treinado
+docker compose build --no-cache
+
+
+# Subir a aplicação da API com o Modelo
+docker compose up -d
+
+
+# Parar a aplicação da API
+docker compose down
 ```
 
-Acesse em: `http://localhost:8501`
+Acesse a Documentação da API em: `http://localhost:8000/docs`
 
 ### 7. 🌐 Visualizar o relatório HTML
 

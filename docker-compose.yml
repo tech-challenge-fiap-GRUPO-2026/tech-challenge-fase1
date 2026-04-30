@@ -2,9 +2,5 @@ services:
   tech-challenge:
     build: .
     container_name: tech-challenge-app-fase-1
-    volumes:
-      - .:/appml
     ports:
-      - "8501:8501"
-    tty: true
-    entrypoint: /bin/bash run_app.sh
+      - "8000:8000"
