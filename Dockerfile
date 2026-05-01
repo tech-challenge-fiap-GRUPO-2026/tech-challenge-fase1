@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS treinamento
+FROM python:3.8-slim AS treinamento
 
 COPY requirements.txt .
 
@@ -19,7 +19,7 @@ COPY --chown=appuser:appuser . .
 RUN /bin/bash run_training.sh
 
 
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 COPY requirements.txt .
 
