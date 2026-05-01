@@ -311,11 +311,15 @@ O relatório técnico já está disponível no repositório em dois formatos:
 
 | Biblioteca | Versão recomendada | Uso |
 |------------|-------------------|-----|
+| scipy | >= 1.10 | Biblioteca para Computação Científica |
 | pandas | >= 1.5 | Manipulação e análise de dados |
 | numpy | >= 1.23 | Operações numéricas e transformações |
 | matplotlib | >= 3.6 | Visualizações e gráficos |
 | seaborn | >= 0.12 | Heatmap de correlação e histogramas |
 | scikit-learn | >= 1.2 | Pipeline, Random Forest, Decision Tree, métricas, GridSearchCV |
 | imbalanced-learn | >= 0.10 | SMOTE — oversampling da classe minoritária |
-| streamlit | >= 1.20 | Interface web interativa da aplicação |
-| jupyter | >= 1.0 | Ambiente de notebooks interativos |
+| streamlit | >= 1.20 | Interface web interativa de aplicação |
+| notebook | >= 1.0 | Versão clássica do Jupyter Ambiente de notebooks interativos |
+| jupyterlab | >= 3.6.8 | Versão moderna do Jupyter Ambiente de notebooks interativos |
+| fastapi | >= 0.99.1 | API utilizada para disponibilização do modelo treinado |
+| uvicorn | >= 0.30.6 | Servidor Web utilizado para disponibilizar a API com o modelo |
