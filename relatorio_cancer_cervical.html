@@ -356,7 +356,7 @@
     <span>Scikit-learn</span>
     <span>imbalanced-learn</span>
     <span>Pandas · NumPy</span>
-    <span>Streamlit</span>
+    <span>FastAPI · Uvicorn</span>
   </div>
 
   <div class="team-box">
@@ -380,6 +380,7 @@
       <li><a href="#s3">Pré-processamento e Engenharia de Features</a></li>
       <li><a href="#s4">Modelagem — Modelos Utilizados e Comparativo</a></li>
       <li><a href="#s5">Discussão e Conclusões</a></li>
+      <li><a href="#s6">Documentação da API</a></li>
     </ol>
   </div>
 
@@ -814,6 +815,143 @@ y_pred = (pipeline.predict_proba(X_test)[:, <span class="nm">1</span>] > <span c
           <li><strong>Curva Precisão-Recall</strong> — mais informativa que AUROC para classes muito raras;</li>
           <li><strong>K-Fold estratificado (k=10)</strong> — estimativas mais confiáveis com poucos dados.</li>
         </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SEÇÃO 6 ══ -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Documentação da API</h2>
+    </div>
+
+    <p class="section-intro">
+      O modelo treinado é disponibilizado via <strong>FastAPI</strong>, com documentação interativa gerada
+      automaticamente pelo Swagger UI em <code>http://localhost:8000/docs</code>.
+    </p>
+
+    <div class="cards" style="margin-bottom:28px;">
+      <div class="card info">
+        <div class="card-label">Base URL</div>
+        <div class="card-value" style="font-size:1rem;font-family:'Cascadia Code','Fira Code','Consolas',monospace;">localhost:8000</div>
+        <div class="card-sub">Porta padrão da aplicação</div>
+      </div>
+      <div class="card success">
+        <div class="card-label">Swagger UI</div>
+        <div class="card-value" style="font-size:1rem;font-family:'Cascadia Code','Fira Code','Consolas',monospace;">/docs</div>
+        <div class="card-sub">Documentação interativa</div>
+      </div>
+      <div class="card">
+        <div class="card-label">ReDoc</div>
+        <div class="card-value" style="font-size:1rem;font-family:'Cascadia Code','Fira Code','Consolas',monospace;">/redoc</div>
+        <div class="card-sub">Documentação alternativa</div>
+      </div>
+      <div class="card accent">
+        <div class="card-label">Endpoints</div>
+        <div class="card-value">2</div>
+        <div class="card-sub">GET /predict · GET /report</div>
+      </div>
+    </div>
+
+    <!-- Endpoint: /predict -->
+    <div class="model-card" style="border-top-color:#2563eb;">
+      <div class="model-header">
+        <div class="model-title">
+          <span class="badge blue" style="font-size:.78rem;margin-right:8px;">GET</span>
+          /predict
+        </div>
+        <div class="model-tags">
+          <span class="badge blue">application/json</span>
+          <span class="badge green">200 OK</span>
+        </div>
+      </div>
+      <p class="model-desc">
+        Executa a predição do modelo utilizando os dados de teste (<code>X_test.pkl</code>)
+        serializados no diretório <code>model/</code> durante o treinamento.
+        Retorna um array de inteiros — <code>0</code> para biópsia negativa (saudável)
+        e <code>1</code> para biópsia positiva (câncer).
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">200 OK — Resposta</div>
+<pre><code>{
+  <span class="st">"prediction"</span>: [<span class="nm">0</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>, <span class="nm">1</span>, <span class="nm">0</span>]
+}</code></pre>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">500 Internal Server Error</div>
+<pre><code>{
+  <span class="st">"msg"</span>: <span class="st">"Modelo ou dados de Testes
+de X não podem ser carregados"</span>
+}</code></pre>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-bottom:0;">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-body">
+          <code>0</code> = Biópsia negativa (saudável) &nbsp;·&nbsp;
+          <code>1</code> = Biópsia positiva (câncer)
+        </div>
+      </div>
+    </div>
+
+    <!-- Endpoint: /report -->
+    <div class="model-card" style="border-top-color:#047857;">
+      <div class="model-header">
+        <div class="model-title">
+          <span class="badge blue" style="font-size:.78rem;margin-right:8px;">GET</span>
+          /report
+        </div>
+        <div class="model-tags">
+          <span class="badge gray">text/plain</span>
+          <span class="badge green">200 OK</span>
+        </div>
+      </div>
+      <p class="model-desc">
+        Retorna o relatório de classificação completo gerado pelo <code>scikit-learn</code>
+        com base nos dados de teste (<code>X_test.pkl</code> e <code>y_test.pkl</code>).
+        Exibe precisão, recall, F1-score e suporte para cada classe.
+      </p>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">200 OK — Resposta (text/plain)</div>
+<pre><code>              precision    recall  f1-score   support
+
+           <span class="nm">0</span>       <span class="nm">0.96</span>      <span class="nm">0.94</span>      <span class="nm">0.95</span>       <span class="nm">161</span>
+           <span class="nm">1</span>       <span class="nm">0.31</span>      <span class="nm">0.36</span>      <span class="nm">0.33</span>        <span class="nm">11</span>
+
+    accuracy                           <span class="nm">0.91</span>       <span class="nm">172</span>
+   macro avg       <span class="nm">0.63</span>      <span class="nm">0.65</span>      <span class="nm">0.64</span>       <span class="nm">172</span>
+weighted avg       <span class="nm">0.92</span>      <span class="nm">0.91</span>      <span class="nm">0.91</span>       <span class="nm">172</span></code></pre>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:4px;">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">500 Internal Server Error</div>
+<pre><code>{
+  <span class="st">"msg"</span>: <span class="st">"Modelo ou dados de Testes
+de X e y não podem ser carregados"</span>
+}</code></pre>
+        </div>
+        <div class="metric-grid" style="margin-top:0;align-content:start;">
+          <div class="metric-cell"><div class="m-label">Precisão</div><div class="m-val" style="color:#d97706">31%</div><div class="m-class">câncer</div></div>
+          <div class="metric-cell"><div class="m-label">Recall</div><div class="m-val" style="color:#047857">36%</div><div class="m-class">câncer</div></div>
+          <div class="metric-cell"><div class="m-label">F1-Score</div><div class="m-val" style="color:#d97706">0,33</div><div class="m-class">câncer</div></div>
+          <div class="metric-cell"><div class="m-label">Acurácia</div><div class="m-val" style="color:#047857">91%</div><div class="m-class">global</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout ok" style="margin-top:8px;">
+      <div class="callout-icon">🚀</div>
+      <div class="callout-body">
+        <strong>Como executar a API</strong>
+        Execute <code>./run_training.sh</code> para treinar e serializar o modelo, depois
+        <code>./run_api.sh</code> para subir o servidor. Ou use <code>docker compose up -d</code>
+        para subir tudo de uma vez. Acesse <code>http://localhost:8000/docs</code> para testar os endpoints interativamente.
       </div>
     </div>
   </div>

@@ -197,13 +197,13 @@ tech-challenge-fase1/
 │   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
 ├── app/
 │   ├── __init__.py
-│   ├── api.py                             # Ponto de entrada da aplicação que realiza o treinamento do modelo
-|   ├── training.py                        # Ponto de entrada da aplicação que representa a API que usa o modelo
+│   ├── api.py                             # Ponto de entrada da API — expõe o endpoint de predição com FastAPI
+|   ├── training.py                        # Ponto de entrada do treinamento — treina e serializa o modelo
 │   └── src/
 |       ├── constants.py                   # Contém as constantes compartilhadas e utilizadas pelo treinamento e a API
 │       ├── data.py                        # Carregamento e tratamento do dataset
 │       ├── pipeline_functions.py          # Funções de pré-processamento do pipeline
-│       ├── streamlit_helper.py            # Componentes de UI (Streamlit)
+│       ├── streamlit_helper.py            # Componente auxiliar legado (não utilizado pela API)
 │       └── train_test.py                  # Treinamento e avaliação dos modelos
 ├── Dockerfile                             # Imagem Docker da aplicação
 ├── docker-compose.yml                     # Orquestração dos containers
@@ -307,6 +307,81 @@ O relatório técnico já está disponível no repositório em dois formatos:
 
 ---
 
+## 🌐 Documentação da API
+
+A API é disponibilizada via **FastAPI** e expõe documentação interativa automática gerada pelo Swagger.
+
+| Interface | URL |
+|-----------|-----|
+| Swagger UI | `http://localhost:8000/docs` |
+| ReDoc | `http://localhost:8000/redoc` |
+
+### Base URL
+
+```
+http://localhost:8000
+```
+
+### Endpoints
+
+| Método | Rota | Resposta | Descrição |
+|--------|------|----------|-----------|
+| `GET` | `/predict` | `application/json` | Executa predição com os dados de teste |
+| `GET` | `/report` | `text/plain` | Retorna o relatório de classificação |
+
+---
+
+#### `GET /predict`
+
+Realiza a predição do modelo utilizando os dados de teste (`X_test.pkl`) serializados no diretório `model/` durante o treinamento.
+
+**Resposta de sucesso — `200 OK`**
+
+```json
+{
+  "prediction": [0, 0, 1, 0, 0, 1]
+}
+```
+
+> `0` = Biópsia negativa (saudável) · `1` = Biópsia positiva (câncer)
+
+**Resposta de erro — `500 Internal Server Error`**
+
+```json
+{
+  "msg": "Modelo ou dados de Testes de X não podem ser carregados"
+}
+```
+
+---
+
+#### `GET /report`
+
+Retorna o relatório de classificação completo gerado pelo `scikit-learn` com base nos dados de teste (`X_test.pkl` e `y_test.pkl`).
+
+**Resposta de sucesso — `200 OK`** — `text/plain`
+
+```
+              precision    recall  f1-score   support
+
+           0       0.96      0.94      0.95       161
+           1       0.31      0.36      0.33        11
+
+    accuracy                           0.91       172
+   macro avg       0.63      0.65      0.64       172
+weighted avg       0.92      0.91      0.91       172
+```
+
+**Resposta de erro — `500 Internal Server Error`**
+
+```json
+{
+  "msg": "Modelo ou dados de Testes de X e y não podem ser carregados"
+}
+```
+
+---
+
 ## 🧩 Dependências
 
 | Biblioteca | Versão recomendada | Uso |
@@ -318,7 +393,6 @@ O relatório técnico já está disponível no repositório em dois formatos:
 | seaborn | >= 0.12 | Heatmap de correlação e histogramas |
 | scikit-learn | >= 1.2 | Pipeline, Random Forest, Decision Tree, métricas, GridSearchCV |
 | imbalanced-learn | >= 0.10 | SMOTE — oversampling da classe minoritária |
-| streamlit | >= 1.20 | Interface web interativa de aplicação |
 | notebook | >= 1.0 | Versão clássica do Jupyter Ambiente de notebooks interativos |
 | jupyterlab | >= 3.6.8 | Versão moderna do Jupyter Ambiente de notebooks interativos |
 | fastapi | >= 0.99.1 | API utilizada para disponibilização do modelo treinado |
