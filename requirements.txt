@@ -1,12 +1,12 @@
-fastapi
-imbalanced-learn
-jupyterlab
-matplotlib
-notebook
-numpy
-pandas
-scikit-learn
-scipy
-seaborn
-streamlit
-uvicorn[standard]
+fastapi>=0.99.1
+imbalanced-learn>=0.10
+jupyterlab>=3.6.8
+matplotlib>=3.6
+notebook>=1.0
+numpy>=1.23
+pandas>=1.5
+scikit-learn>=1.2
+scipy>=1.10
+seaborn>=0.12
+streamlit>= 1.20
+uvicorn[standard]>=0.30.6
