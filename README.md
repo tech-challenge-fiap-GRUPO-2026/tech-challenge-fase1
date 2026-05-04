@@ -397,3 +397,12 @@ weighted avg       0.92      0.91      0.91       172
 | jupyterlab | >= 3.6.8 | Versão moderna do Jupyter Ambiente de notebooks interativos |
 | fastapi | >= 0.99.1 | API utilizada para disponibilização do modelo treinado |
 | uvicorn | >= 0.30.6 | Servidor Web utilizado para disponibilizar a API com o modelo |
+
+---
+
+### ▶️ URL Vídeo demonstração
+
+```
+https://www.youtube.com/watch?v=Pa4ZjERYIrQ
+```
+
