@@ -1,6 +1,16 @@
+<div align="center">
+
 # 🎗️ Classificador de Risco — Câncer do Colo do Útero
 
-Trabalho do **Tech Challenge Fase 1** da Pós-Graduação **IA Para Desenvolvedores** — FIAP
+**Tech Challenge Fase 1 · Pós-Graduação IA Para Desenvolvedores · FIAP**
+
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.99%2B-009688?logo=fastapi&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2%2B-F7931E?logo=scikitlearn&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/License-Academic-lightgrey)
+
+</div>
 
 ---
 
@@ -16,12 +26,11 @@ Trabalho do **Tech Challenge Fase 1** da Pós-Graduação **IA Para Desenvolvedo
 
 ---
 
-## 📋 Descrição do Projeto
+## 📋 Visão Geral
 
-Projeto de aprendizado de máquina para **triagem de pacientes com risco de câncer do colo do útero**.  
-O modelo utiliza o dataset *Risk Factors Cervical Cancer*, coletado no Hospital Universitário de Caracas, Venezuela, disponível no UCI Machine Learning Repository.
+Projeto de aprendizado de máquina para **triagem de pacientes com risco de câncer do colo do útero**.
 
-O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** (target principal), com base em informações demográficas, comportamentais e histórico médico.
+O modelo é baseado no dataset *Risk Factors Cervical Cancer*, coletado no Hospital Universitário de Caracas (Venezuela) e disponível no [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/383/cervical+cancer+risk+factors). O objetivo é classificar se uma paciente terá resultado positivo na **Biopsia** (target principal), a partir de informações demográficas, comportamentais e histórico médico.
 
 ---
 
@@ -34,15 +43,15 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 | Link | https://archive.ics.uci.edu/dataset/383/cervical+cancer+risk+factors |
 | Arquivo local | `data/risk_factors_cervical_cancer.csv` |
 | Tamanho | 858 pacientes × 36 variáveis |
-| Classe positiva (câncer) | 55 pacientes (6%) |
-| Classe negativa (saudável) | 803 pacientes (94%) |
+| Classe positiva — câncer | 55 pacientes **(6%)** |
+| Classe negativa — saudável | 803 pacientes **(94%)** |
 
-> ⚠️ O dataset é altamente **desbalanceado**: apenas 6% dos registros correspondem a casos positivos de biópsia.
+> ⚠️ **Dataset altamente desbalanceado:** apenas 6% dos registros correspondem a casos positivos de biópsia.
 
 ### 🔬 Variáveis originais
 
 | Variável | Tipo | Descrição |
-|----------|------|-----------|
+|----------|:----:|-----------|
 | Age | int | Idade da paciente |
 | Number of sexual partners | int | Número de parceiros sexuais |
 | First sexual intercourse | int | Idade na primeira relação sexual |
@@ -69,35 +78,37 @@ O objetivo é classificar se uma paciente tem resultado positivo na **Biopsia** 
 | STDs: Number of diagnosis | int | Número de diagnósticos de DST |
 | STDs: Time since first diagnosis | int | Tempo desde o primeiro diagnóstico |
 | STDs: Time since last diagnosis | int | Tempo desde o último diagnóstico |
-| **Hinselmann** | bool | Target (removido — exame auxiliar) |
-| **Schiller** | bool | Target (removido — exame auxiliar) |
-| **Citology** | bool | Target (removido — exame auxiliar) |
-| **Biopsy** | bool | **Target principal** |
-| Dx:Cancer | bool | Diagnóstico prévio (removido) |
-| Dx:CIN | bool | Diagnóstico prévio (removido) |
-| Dx:HPV | bool | Diagnóstico prévio (removido) |
-| Dx | bool | Diagnóstico prévio (removido) |
+| **Hinselmann** | bool | Target *(removido — exame auxiliar)* |
+| **Schiller** | bool | Target *(removido — exame auxiliar)* |
+| **Citology** | bool | Target *(removido — exame auxiliar)* |
+| **Biopsy** | bool | ✅ **Target principal** |
+| Dx:Cancer | bool | Diagnóstico prévio *(removido)* |
+| Dx:CIN | bool | Diagnóstico prévio *(removido)* |
+| Dx:HPV | bool | Diagnóstico prévio *(removido)* |
+| Dx | bool | Diagnóstico prévio *(removido)* |
 
 ---
 
 ## ⚙️ Pipeline de Pré-Processamento
 
-O notebook implementa um pipeline sklearn com as seguintes etapas:
+O notebook implementa um pipeline `sklearn` com as seguintes etapas em sequência:
 
-1. 🗑️ **Remoção de colunas sem variabilidade** — `STDs:AIDS` e `STDs:cervical condylomatosis` (todos os valores são zero).
-2. 🩹 **Tratamento de valores nulos com indicador de missing** — nulos substituídos pela média + criação de coluna `_preenchido` indicando se a questão foi respondida.
-3. 🔗 **Agrupamento de colunas indicadoras redundantes** — colunas com padrão idêntico de respostas são consolidadas em uma única coluna `_respondido`.
-4. 🚬 **Redução de redundância no tabagismo** — `Smokes (years)` × `Smokes (packs/year)` combinados em `smoke_year_packs`.
-5. 📐 **Transformação logarítmica de variáveis demográficas** — `Age`, `Number of sexual partners`, `First sexual intercourse`, `Num of pregnancies` (log1p).
-6. 💊 **Feature engineering de contraceptivos** — criação de `contraceptive_mid_risk` e `contraceptive_exposure`.
-7. ✂️ **Remoção de redundância entre STDs temporais** — `STDs: Time since first diagnosis` removida por ser redundante com `STDs: Time since last diagnosis`.
-8. 🧠 **Criação de atributos estratégicos** — `sexual_risk`, `smoke_age_risk`, `has_std`, `std_age_risk`, `combined_risk`.
+| # | Etapa | Descrição |
+|---|-------|-----------|
+| 1 | 🗑️ Remoção de colunas sem variabilidade | `STDs:AIDS` e `STDs:cervical condylomatosis` (todos os valores são zero) |
+| 2 | 🩹 Tratamento de nulos com indicador de missing | Nulos substituídos pela média + coluna `_preenchido` indicando se a questão foi respondida |
+| 3 | 🔗 Agrupamento de indicadoras redundantes | Colunas com padrão idêntico de respostas consolidadas em uma única coluna `_respondido` |
+| 4 | 🚬 Redução de redundância no tabagismo | `Smokes (years)` × `Smokes (packs/year)` combinados em `smoke_year_packs` |
+| 5 | 📐 Transformação logarítmica demográfica | `Age`, `Number of sexual partners`, `First sexual intercourse`, `Num of pregnancies` (log1p) |
+| 6 | 💊 Feature engineering de contraceptivos | Criação de `contraceptive_mid_risk` e `contraceptive_exposure` |
+| 7 | ✂️ Remoção de redundância temporal em STDs | `STDs: Time since first diagnosis` removida por ser redundante com `STDs: Time since last diagnosis` |
+| 8 | 🧠 Atributos estratégicos | `sexual_risk`, `smoke_age_risk`, `has_std`, `std_age_risk`, `combined_risk` |
 
 ---
 
 ## 🤖 Modelos Avaliados
 
-Foram testados três cenários progressivos de modelagem, todos usando divisão **80% treino / 20% teste** com `stratify=y` e `random_state=42` para garantir reprodutibilidade.
+Todos os modelos utilizaram divisão **80% treino / 20% teste** com `stratify=y` e `random_state=42` para garantir reprodutibilidade.
 
 ---
 
@@ -108,7 +119,7 @@ Treinado com tratamento mínimo de nulos (apenas imputação pela média), sem o
 ```python
 RandomForestClassifier(
     class_weight={0: 1, 1: 10},    # penaliza 10× mais erros na classe positiva (câncer)
-    n_estimators=200,              # número de árvores na floresta
+    n_estimators=200,
     min_samples_leaf=1,
     random_state=42
 )
@@ -118,19 +129,19 @@ RandomForestClassifier(
 
 ```python
 param_grid = {
-    'model__n_estimators':   [200, 400],
-    'model__max_depth':      [None, 10],
+    'model__n_estimators':     [200, 400],
+    'model__max_depth':        [None, 10],
     'model__min_samples_leaf': [1, 2, 4],
-    'model__class_weight':   [{0:1, 1:10}, {0:1, 1:20}]
+    'model__class_weight':     [{0:1, 1:10}, {0:1, 1:20}]
 }
 GridSearchCV(pipeline, param_grid, cv=5, scoring='f1', n_jobs=-1)
 ```
 
 ---
 
-### Modelo 2 — Random Forest + SMOTE + Threshold ajustado ⭐ melhor resultado
+### Modelo 2 — Random Forest + SMOTE + Threshold ajustado ⭐ Melhor resultado
 
-Mesmo pipeline de pré-processamento completo, acrescido de SMOTE para balancear as classes antes do treino. O limiar de decisão foi ajustado manualmente para maximizar o Recall.
+Pipeline de pré-processamento completo + SMOTE para balancear as classes antes do treino. O limiar de decisão foi ajustado manualmente para maximizar o Recall.
 
 ```python
 # Oversampling da classe minoritária
@@ -138,7 +149,7 @@ SMOTE(random_state=42)
 
 # Classificador
 RandomForestClassifier(
-    class_weight={0: 1, 1: 10},   # SMOTE + class_weight combinados melhoram o F1
+    class_weight={0: 1, 1: 10},    # SMOTE + class_weight combinados melhoram o F1
     n_estimators=200,
     min_samples_leaf=1,
     random_state=42
@@ -149,7 +160,7 @@ threshold = 0.41
 y_pred = (y_proba > threshold).astype(int)
 ```
 
-> O SMOTE sozinho piorou o F1. A combinação SMOTE + `class_weight` foi o que trouxe ganho real.
+> 💡 O SMOTE sozinho **piorou** o F1. A combinação SMOTE + `class_weight` foi o que trouxe ganho real.
 
 ---
 
@@ -175,10 +186,10 @@ DecisionTreeClassifier(
 | Modelo | Precisão (câncer) | Recall (câncer) | F1 (câncer) | Acurácia | AUROC |
 |--------|:-----------------:|:---------------:|:-----------:|:--------:|:-----:|
 | RF Baseline | 50% | 9% | 0.15 | 94% | — |
-| **RF + SMOTE + Threshold 0.41** | **31%** | **36%** | **0.33** | **91%** | **0.737** |
+| **RF + SMOTE + Threshold 0.41** ⭐ | **31%** | **36%** | **0.33** | **91%** | **0.737** |
 | Árvore de Decisão (sem SMOTE) | 22% | 36% | 0.28 | 88% | 0.624 |
 
-> **Recall** é a métrica mais importante neste contexto clínico: representa a capacidade do modelo de identificar corretamente os casos de câncer (minimizar falsos negativos).
+> 🏥 **Recall** é a métrica mais importante neste contexto clínico — representa a capacidade de identificar corretamente os casos de câncer, minimizando falsos negativos.
 
 **Conclusão:** O melhor resultado foi obtido com **Random Forest + SMOTE + threshold 0.41**, elevando o Recall de 9% para 36%. O pré-processamento melhorou a importância das features, mas o dataset possui baixo poder preditivo intrínseco — é pequeno (858 pacientes) e altamente desbalanceado (6% positivos). O uso de SMOTE, embora eficaz tecnicamente, não é bem-visto pela comunidade médica. A Árvore de Decisão, mesmo com AUROC inferior (0.624), pode ser preferível em contextos que exigem interpretabilidade ou que rejeitem oversampling sintético.
 
@@ -188,30 +199,37 @@ DecisionTreeClassifier(
 
 ```
 tech-challenge-fase1/
+│
 ├── data/
-│   └── risk_factors_cervical_cancer.csv   # Dataset original (UCI)
+│   └── risk_factors_cervical_cancer.csv    # Dataset original (UCI)
+│
 ├── notebooks/
-│   └── init_cervical_cancer.ipynb         # Notebook principal com análise e modelos
-├── reports/
-│   ├── relatorio_tecnico_abnt.pdf         # Relatório técnico completo (formato ABNT — PDF)
-│   └── relatorio_tecnico_abnt.docx        # Relatório técnico completo (formato Word)
+│   └── init_cervical_cancer.ipynb          # Notebook principal com análise e modelos
+│
+├── docs/
+│   ├── relatorio_tecnico_abnt.pdf          # Relatório técnico completo (PDF — ABNT)
+│   └── relatorio_tecnico_abnt.docx         # Relatório técnico completo (Word)
+│
 ├── app/
 │   ├── __init__.py
-│   ├── api.py                             # Ponto de entrada da API — expõe o endpoint de predição com FastAPI
-|   ├── training.py                        # Ponto de entrada do treinamento — treina e serializa o modelo
+│   ├── api.py                              # Ponto de entrada da API (FastAPI)
+│   ├── training.py                         # Ponto de entrada do treinamento
 │   └── src/
-|       ├── constants.py                   # Contém as constantes compartilhadas e utilizadas pelo treinamento e a API
-│       ├── data.py                        # Carregamento e tratamento do dataset
-│       ├── pipeline_functions.py          # Funções de pré-processamento do pipeline
-│       ├── streamlit_helper.py            # Componente auxiliar legado (não utilizado pela API)
-│       └── train_test.py                  # Treinamento e avaliação dos modelos
-├── Dockerfile                             # Imagem Docker da aplicação
-├── docker-compose.yml                     # Orquestração dos containers
-├── requirements.txt                       # Dependências Python
-├── run_api.sh                             # Script de execução da API
-├── run_training.sh                        # Script de execução da Rotina de Treinamento e Deploy do Modelo
-└── README.md                              # Este arquivo
-└── relatorio_cancer_cervical.html         # Relatório visual interativo com gráficos
+│       ├── __init__.py
+│       ├── constants.py                    # Constantes compartilhadas
+│       ├── data.py                         # Carregamento e tratamento do dataset
+│       ├── pipeline_functions.py           # Funções de pré-processamento
+│       ├── streamlit_helper.py             # Componente auxiliar legado (não usado pela API)
+│       └── train_test.py                   # Treinamento e avaliação dos modelos
+│
+├── scripts/                                # Pasta reservada para scripts auxiliares
+├── Dockerfile                              # Imagem Docker da aplicação
+├── docker-compose.yml                      # Orquestração dos containers
+├── requirements.txt                        # Dependências Python
+├── run_api.sh                              # Script de execução da API
+├── run_training.sh                         # Script de treinamento e deploy do modelo
+├── relatorio_cancer_cervical.html          # Relatório visual interativo com gráficos
+└── README.md                               # Este arquivo
 ```
 
 ---
@@ -222,6 +240,9 @@ tech-challenge-fase1/
 
 - Python 3.8 ou superior
 - pip
+- Docker *(opcional, para execução em container)*
+
+---
 
 ### 1. 📥 Clonar o repositório
 
@@ -230,7 +251,7 @@ git clone https://github.com/wilsonLima/tech-challenge-fase1
 cd tech-challenge-fase1
 ```
 
-### 2. 🐍 (Opcional) Criar ambiente virtual
+### 2. 🐍 Criar ambiente virtual *(opcional)*
 
 ```bash
 python -m venv venv
@@ -260,72 +281,69 @@ Ou, se preferir JupyterLab:
 jupyter lab notebooks/init_cervical_cancer.ipynb
 ```
 
-### 5. ⚡ Executar todas as células
-
 No Jupyter, clique em **Kernel → Restart & Run All** para executar o pipeline completo do início ao fim.
 
-### 6. 🖥️ Executar a aplicação com API e Modelo Treinado
+---
 
-**Via script no Linux :**
+### 5. 🖥️ Executar a API com Modelo Treinado
+
+**Via script (Linux):**
 
 ```bash
-# Realizar o treinamento do modelo e o deploy no diretório model
+# Treinar o modelo e fazer deploy no diretório model/
 ./run_training.sh
 
-# Subir a aplicação da API com o Modelo
+# Subir a API com o modelo
 ./run_api.sh
 ```
 
-**Via Docker (recomendado):**
-
+**Via Docker *(recomendado)*:**
 
 ```bash
-# Gerar a imagem da API com o Modelo Treinado
+# Gerar a imagem com o modelo treinado
 docker compose build --no-cache
 
-
-# Subir a aplicação da API com o Modelo
+# Subir a API
 docker compose up -d
 
-
-# Parar a aplicação da API
+# Parar a API
 docker compose down
 ```
 
-Acesse a Documentação da API em: `http://localhost:8000/docs`
+Acesse a documentação interativa em: **`http://localhost:8000/docs`**
 
-### 7. 🌐 Visualizar o relatório HTML
+---
+
+### 6. 🌐 Visualizar o relatório HTML
 
 Abra o arquivo `relatorio_cancer_cervical.html` diretamente em qualquer navegador moderno (Chrome, Firefox, Edge).
 
-### 8. 📄 Relatório técnico (ABNT)
+### 7. 📄 Relatório técnico (ABNT)
 
-O relatório técnico já está disponível no repositório em dois formatos:
+O relatório técnico está disponível em dois formatos:
 
-- `docs/relatorio_tecnico_abnt.pdf`  — abra diretamente em qualquer leitor de PDF.
+- `docs/relatorio_tecnico_abnt.pdf` — abra diretamente em qualquer leitor de PDF.
 - `docs/relatorio_tecnico_abnt.docx` — abra no Microsoft Word ou Google Docs para edição.
 
 ---
 
 ## 🌐 Documentação da API
 
-A API é disponibilizada via **FastAPI** e expõe documentação interativa automática gerada pelo Swagger.
+A API é disponibilizada via **FastAPI** com documentação interativa automática gerada pelo Swagger.
 
 | Interface | URL |
 |-----------|-----|
 | Swagger UI | `http://localhost:8000/docs` |
 | ReDoc | `http://localhost:8000/redoc` |
 
-### Base URL
+**Base URL:** `http://localhost:8000`
 
-```
-http://localhost:8000
-```
+---
 
 ### Endpoints
 
 | Método | Rota | Resposta | Descrição |
-|--------|------|----------|-----------|
+|:------:|------|----------|-----------|
 | `GET` | `/predict` | `application/json` | Executa predição com os dados de teste |
 | `GET` | `/report` | `text/plain` | Retorna o relatório de classificação |
 
@@ -333,9 +351,9 @@ http://localhost:8000
 
 #### `GET /predict`
 
-Realiza a predição do modelo utilizando os dados de teste (`X_test.pkl`) serializados no diretório `model/` durante o treinamento.
+Realiza a predição utilizando os dados de teste (`X_test.pkl`) serializados em `model/` durante o treinamento.
 
-**Resposta de sucesso — `200 OK`**
+**200 OK**
 
 ```json
 {
@@ -345,7 +363,7 @@ Realiza a predição do modelo utilizando os dados de teste (`X_test.pkl`) seria
 
 > `0` = Biópsia negativa (saudável) · `1` = Biópsia positiva (câncer)
 
-**Resposta de erro — `500 Internal Server Error`**
+**500 Internal Server Error**
 
 ```json
 {
@@ -359,7 +377,7 @@ Realiza a predição do modelo utilizando os dados de teste (`X_test.pkl`) seria
 
 Retorna o relatório de classificação completo gerado pelo `scikit-learn` com base nos dados de teste (`X_test.pkl` e `y_test.pkl`).
 
-**Resposta de sucesso — `200 OK`** — `text/plain`
+**200 OK** — `text/plain`
 
 ```
               precision    recall  f1-score   support
@@ -372,7 +390,7 @@ Retorna o relatório de classificação completo gerado pelo `scikit-learn` com 
 weighted avg       0.92      0.91      0.91       172
 ```
 
-**Resposta de erro — `500 Internal Server Error`**
+**500 Internal Server Error**
 
 ```json
 {
@@ -384,25 +402,26 @@ weighted avg       0.92      0.91      0.91       172
 
 ## 🧩 Dependências
 
-| Biblioteca | Versão recomendada | Uso |
-|------------|-------------------|-----|
-| scipy | >= 1.10 | Biblioteca para Computação Científica |
+| Biblioteca | Versão | Uso |
+|------------|:------:|-----|
+| scipy | >= 1.10 | Computação científica |
 | pandas | >= 1.5 | Manipulação e análise de dados |
 | numpy | >= 1.23 | Operações numéricas e transformações |
 | matplotlib | >= 3.6 | Visualizações e gráficos |
 | seaborn | >= 0.12 | Heatmap de correlação e histogramas |
 | scikit-learn | >= 1.2 | Pipeline, Random Forest, Decision Tree, métricas, GridSearchCV |
 | imbalanced-learn | >= 0.10 | SMOTE — oversampling da classe minoritária |
-| notebook | >= 1.0 | Versão clássica do Jupyter Ambiente de notebooks interativos |
-| jupyterlab | >= 3.6.8 | Versão moderna do Jupyter Ambiente de notebooks interativos |
-| fastapi | >= 0.99.1 | API utilizada para disponibilização do modelo treinado |
-| uvicorn | >= 0.30.6 | Servidor Web utilizado para disponibilizar a API com o modelo |
+| notebook | >= 1.0 | Jupyter clássico |
+| jupyterlab | >= 3.6.8 | Jupyter moderno |
+| fastapi | >= 0.99.1 | Framework da API REST |
+| uvicorn | >= 0.30.6 | Servidor ASGI para a API |
 
 ---
 
-### ▶️ URL Vídeo demonstração
+## 🎬 Vídeo Demonstração
+
+[![Assistir no YouTube](https://img.shields.io/badge/YouTube-Assistir%20Demo-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=Pa4ZjERYIrQ)
 
 ```
 https://www.youtube.com/watch?v=Pa4ZjERYIrQ
 ```
-
