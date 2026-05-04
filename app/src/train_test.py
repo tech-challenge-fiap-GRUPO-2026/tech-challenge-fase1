@@ -67,6 +67,8 @@ class ModelTestTraining(object):
 
     def __deploy(self, X_test, y_test):
         print('Iniciando o Deploy do modelo ...')
+        if not os.path.exists(self.deploy_dir_path):
+            os.makedirs(self.deploy_dir_path)
         with open(
             os.path.join(self.deploy_dir_path, MODEL_FILE),
             'wb'
