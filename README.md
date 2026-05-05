@@ -272,6 +272,7 @@ venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+> 💡 **Dica:** Se você encontrar erros com pacotes legados, adicione a tag `--use-deprecated=legacy-resolver` ao comando pip install.
 
 ### 4. ▶️ Executar o notebook
 
