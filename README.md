@@ -222,7 +222,11 @@ tech-challenge-fase1/
 │       ├── streamlit_helper.py             # Componente auxiliar legado (não usado pela API)
 │       └── train_test.py                   # Treinamento e avaliação dos modelos
 │
-├── scripts/                                # Pasta reservada para scripts auxiliares
+├── model/                                  # Gerado automaticamente pelo run_training.sh
+│   ├── model.pkl                           # Modelo treinado serializado
+│   ├── X_test.pkl                          # Dados de teste (features)
+│   └── y_test.pkl                          # Dados de teste (labels)
+│
 ├── Dockerfile                              # Imagem Docker da aplicação
 ├── docker-compose.yml                      # Orquestração dos containers
 ├── requirements.txt                        # Dependências Python
